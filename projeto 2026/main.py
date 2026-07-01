@@ -8,6 +8,22 @@ janela.geometry("500x300")
 
 pygame.mixer.init()
 
+barra_menu = Menu(janela)
+janela.config(menu=barra_menu)
+
+songs = []
+atual_song = ""
+paused = False
+
+def carregar_musica():
+    janela.directory = filedialog.askdirectory()
+
+    
+
+organizar_menu = Menu(barra_menu, tearoff=False)
+organizar_menu.add_command(label='Selecione a pasta')
+barra_menu.add_cascade(label='Organizar', menu=organizar_menu)
+
 songlist = Listbox(janela, bg="black", fg="white", width=100, height=15)
 songlist.pack()
 
