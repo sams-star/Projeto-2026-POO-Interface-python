@@ -66,6 +66,7 @@ playlist("🎵 HELP", "home.jpg", "teste main.py")
 playlist("AAAAAAAA", "home.jpg", "teste main.py")
 playlist("AAAAAAAA", "home.jpg", "teste main.py")
 playlist("Sam e Caty", "home.jpg", "teste main.py")
+playlist("Salve suas musicas", "home.jpg", "teste main.py")
 
 
 root.mainloop()
