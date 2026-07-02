@@ -52,7 +52,7 @@ class MusicPlayer:
         )
 
         # Capa
-        self.original_cover = Image.open("gatito.jpg").resize((220, 220))
+        self.original_cover = Image.open("bandaft.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
