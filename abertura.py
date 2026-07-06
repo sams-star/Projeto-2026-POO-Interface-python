@@ -61,12 +61,12 @@ def playlist(nome, img_path, arquivo_py):
 
 
 
-playlist("🎵 Triste - Azul", "gatito.jpg", "azul.py")
-playlist("🎵 HELP", "home.jpg", "teste main.py")
-playlist("AAAAAAAA", "home.jpg", "teste main.py")
+playlist("Sweet Child O' mine - Guns n roses", "bandaft.jpg", "sweetChildOMine.py")
+playlist("🎵 Wonderwall - Oasis", "Wonderwall.jpg", "wonderwall.py")
+playlist("Bring me to life - Evanescence", "evanescence.jpg", "bringMeToLife.py")
 playlist("AAAAAAAA", "home.jpg", "teste main.py")
 playlist("Sam e Caty", "home.jpg", "teste main.py")
-playlist("Salve suas musicas", "home.jpg", "teste main.py")
+playlist("Salve suas musicas", "musica.jpg", "salvar_musicas.py")
 
 
 root.mainloop()
