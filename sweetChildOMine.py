@@ -161,10 +161,10 @@ class MusicPlayer:
                 pygame.mixer.music.unpause()
                 self.paused = False
 
-            # Dispara as animações visuais
+
             self.rotate()
             self.progress_bar()
-            self.sing()
+            
         else:
             self.play.config(text="▶")
             pygame.mixer.music.pause()

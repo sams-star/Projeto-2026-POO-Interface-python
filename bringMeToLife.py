@@ -8,11 +8,11 @@ WIDTH = 360
 HEIGHT = 600
 
 class MusicPlayer:
-    def __init__(self, root):
-        self.root = root
-        self.root.title("SpotTI")
-        self.root.geometry(f"{WIDTH}x{HEIGHT}")
-        self.root.resizable(False, False)
+    def __init__(self, janela):
+        self.janela = janela
+        self.janela.title("SpotTI")
+        self.janela.geometry(f"{WIDTH}x{HEIGHT}")
+        self.janela.resizable(False, False)
 
        
         pygame.mixer.init()
@@ -54,7 +54,7 @@ class MusicPlayer:
         self.current_frame = 0
         self.bg = self.frames[self.current_frame]
 
-        self.canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas = tk.Canvas(janela, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         
@@ -105,7 +105,7 @@ class MusicPlayer:
 
         
         self.progress = ttk.Progressbar(
-            root,
+            janela,
             length=270,
             maximum=100,
             style="Custom.Horizontal.TProgressbar"
@@ -128,12 +128,12 @@ class MusicPlayer:
 
         # Botão Play/Pause
         self.play = tk.Button(
-            root,
+            janela,
             text="▶",
             font=("Arial", 22),
             bg="#120d42",
             fg="white",
-            bd=0, # Remove borda do botão para ficar mais limpo
+            bd=0, 
             highlightthickness=0,
             command=self.toggle_music
         )
@@ -170,14 +170,13 @@ class MusicPlayer:
             pygame.mixer.music.pause()
             self.paused = True
 
-    # Animação do GIF de fundo (sem mudanças)
+  
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        self.root.after(90, self.animate_bg)
+        self.janela.after(90, self.animate_bg)
 
-    # Animação de rotação da Capa (sem mudanças no algoritmo, mas agora gira a imagem redonda)
     def rotate(self): 
         if not self.playing or self.paused:
             return
@@ -189,9 +188,9 @@ class MusicPlayer:
             self.cover_id,
             image=self.cover
         )
-        self.root.after(75, self.rotate)
+        self.janela.after(75, self.rotate)
 
-    # Simulação da Barra de Progresso (sem mudanças)
+    
     def progress_bar(self):
         if not self.playing or self.paused:
             return
@@ -200,14 +199,14 @@ class MusicPlayer:
         if value > 100:
             value = 0
         self.progress["value"] = value
-        self.root.after(95, self.progress_bar)
+        self.janela.after(95, self.progress_bar)
 
 
 
 
-root = tk.Tk()
+janela = tk.Tk()
 
-style = ttk.Style(root)
+style = ttk.Style(janela)
 style.theme_use("clam")
 style.configure(
     "Custom.Horizontal.TProgressbar",
@@ -215,5 +214,5 @@ style.configure(
     background="white" 
 )
 
-app = MusicPlayer(root)
-root.mainloop()
+app = MusicPlayer(janela)
+janela.mainloop()
