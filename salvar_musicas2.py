@@ -92,6 +92,21 @@ class SalvarMusicas:
             self.songlist.select_set(0)
             self.atual_song = self.songs[0]
 
+        self.salvar_json()
+
+
+    def salvar_json(self):
+
+        dados = {
+            "musicas": [
+                os.path.join(self.directory, musica)
+                for musica in self.songs
+            ]
+        }
+
+        with open("musicas.json", "w", encoding="utf-8") as arquivo:
+            json.dump(dados, arquivo, indent=4, ensure_ascii=False)
+
 
     def play(self):
 
@@ -162,23 +177,3 @@ class SalvarMusicas:
 
         self.play()
 
-
-    ARQUIVO_JSON = "musicas.json"
-
-def salvar_musicas():
-    global ARQUIVO_JSON
-
-    pasta = filedialog.askdirectory()
-
-    if not pasta:
-        return
-
-    musicas = []
-
-    for arquivo in os.listdir(pasta):
-
-        if arquivo.endswith(".mp3"):
-            musicas.append(os.path.join(pasta, arquivo))
-
-    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
-        json.dump(musicas, f, indent=4, ensure_ascii=False)
