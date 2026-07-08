@@ -66,6 +66,7 @@ playlist("🎵 Wonderwall - Oasis", "Wonderwall.jpg", "wonderwall.py")
 playlist("Bring me to life - Evanescence", "evanescence.jpg", "bringMeToLife.py")
 playlist("AAAAAAAA", "home.jpg", "teste main.py")
 playlist("Sam e Caty", "home.jpg", "teste main.py")
+playlist("Mais Ninquém", "home.jpg", "mais_ninquem.py")
 playlist("Salve suas musicas", "musica.jpg", "salvar_musicas.py")
 
 
