@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageFilter
+from PIL import Image, ImageTk, ImageFilter, ImageDraw
+import pygame
+import os
 
 WIDTH = 360
 HEIGHT = 600
@@ -13,8 +15,28 @@ class MusicPlayer:
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
 
+        pygame.mixer.init()
+
+        self.atual_song = "aiaiamor.mp3"
         self.playing = False
+        self.paused = False
         self.angle = 0
+
+        def make_image_circular(image_path, size):
+            img = Image.open(image_path).convert("RGBA")
+            img = img.resize(size, Image.Resampling.LANCZOS) 
+
+            
+            mask = Image.new("L", size, 0)
+            draw = ImageDraw.Draw(mask)
+            
+            
+            draw.ellipse((2, 2, size[0]-2, size[1]-2), fill=255)
+
+            
+            circular_img = Image.new("RGBA", size, (0, 0, 0, 0)) 
+            circular_img.paste(img, (0, 0), mask=mask)
+            return circular_img
 
         #gif
         self.gif = Image.open("slah.gif")
@@ -51,6 +73,8 @@ class MusicPlayer:
             outline=""
         )
 
+        tamanho_foto = (220, 220)
+
         # Capa
         self.original_cover = Image.open("bandaft.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
@@ -61,13 +85,16 @@ class MusicPlayer:
             image=self.cover
         )
 
-    
+        nome_exibicao = os.path.splitext(self.atual_song)[0].replace("_", " ").title()
+
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
             text="",
             fill="white",
-            font=("Arial", 16, "bold")
+            font=("Arial", 16, "bold"),
+            width=300,
+            justify="center"
         )
 
         self.artist = self.canvas.create_text(
@@ -128,6 +155,32 @@ class MusicPlayer:
             command=self.toggle_music
         )
 
+        def toggle_music(self):
+            if not os.path.exists(self.atual_song):
+                self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
+                return
+
+        self.playing = not self.playing
+
+        if self.playing:
+            self.play.config(text="⏸")
+            
+            if not self.paused:
+                pygame.mixer.music.load(self.atual_song)
+                pygame.mixer.music.play()
+            else:
+                pygame.mixer.music.unpause()
+                self.paused = False
+
+
+            self.rotate()
+            self.progress_bar()
+            
+        else:
+            self.play.config(text="▶")
+            pygame.mixer.music.pause()
+            self.paused = True
+
         self.canvas.create_window(
             WIDTH // 2,
             530,
@@ -156,18 +209,6 @@ class MusicPlayer:
         self.root.after(75, self.rotate)
 
 
-    def rotate(self): 
-        if not self.playing or self.paused:
-            return
-        self.angle = (self.angle + 3) % 360
-        img = self.original_cover.rotate(-self.angle)
-        self.cover = ImageTk.PhotoImage(img)
-
-        self.canvas.itemconfig(
-            self.cover_id,
-            image=self.cover
-        )
-        self.root.after(75, self.rotate)
 
     def progress_bar(self):
         if not self.playing:
@@ -179,16 +220,7 @@ class MusicPlayer:
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
 
-    def toggle_music(self):
-        self.playing = not self.playing
 
-        if self.playing:
-            self.play.config(text="⏸")
-            self.rotate()
-            self.progress_bar()
-            self.sing()
-        else:
-            self.play.config(text="▶")
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
