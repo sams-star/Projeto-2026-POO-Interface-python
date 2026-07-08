@@ -97,12 +97,19 @@ class SalvarMusicas:
 
     def salvar_json(self):
 
-        dados = {
-            "musicas": [
-                os.path.join(self.directory, musica)
-                for musica in self.songs
-            ]
-        }
+        if os.path.exists("musicas.json"):
+            with open("musicas.json", "r", encoding="utf-8") as arquivo:
+                dados = json.load(arquivo)
+        else:
+            dados = []
+
+        nova_pasta = []
+
+        for musica in self.songs:
+            caminho = os.path.join(self.directory, musica)
+            nova_pasta.append(caminho)
+
+        dados.append(nova_pasta)
 
         with open("musicas.json", "w", encoding="utf-8") as arquivo:
             json.dump(dados, arquivo, indent=4, ensure_ascii=False)
