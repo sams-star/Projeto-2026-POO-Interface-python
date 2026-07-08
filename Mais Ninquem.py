@@ -52,7 +52,7 @@ class MusicPlayer:
         )
 
         # Capa
-        self.original_cover = Image.open("maisninquem.gif").resize((220, 220))
+        self.original_cover = Image.open("maisninquem.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
@@ -61,7 +61,7 @@ class MusicPlayer:
             image=self.cover
         )
 
-    
+        # Nome da musiguinha
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -79,7 +79,7 @@ class MusicPlayer:
         )
 
         self.write(
-            "Mais Ninquém",
+            "Mais ninquem",
             self.music_title,
             60,
             callback=lambda: self.write(
@@ -89,9 +89,10 @@ class MusicPlayer:
             )
         )
 
+        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#2E0404",   
+            troughcolor="#05042E",   # fundo
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -107,7 +108,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        
+        # Letras
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -118,12 +119,12 @@ class MusicPlayer:
             justify="center"
         )
 
-      
+        # Play
         self.play = tk.Button(
             root,
             text="▶",
             font=("Arial", 22),
-            bg="#550f0f",
+            bg="#120d42",
             fg="white",
             command=self.toggle_music
         )
@@ -134,30 +135,16 @@ class MusicPlayer:
             window=self.play
         )
 
-    
+    #A ANIMAÇÃO DO GIF 
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        
+        # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
         self.root.after(90, self.animate_bg)
 
-    def rotate(self): 
+    def rotate(self): #animaçãozinha DA FOTO
         if not self.playing:
-            return
-        self.angle = (self.angle + 3) % 360
-        img = self.original_cover.rotate(-self.angle)
-        self.cover = ImageTk.PhotoImage(img)
-
-        self.canvas.itemconfig(
-            self.cover_id,
-            image=self.cover
-        )
-        self.root.after(75, self.rotate)
-
-
-    def rotate(self): 
-        if not self.playing or self.paused:
             return
         self.angle = (self.angle + 3) % 360
         img = self.original_cover.rotate(-self.angle)
@@ -205,7 +192,31 @@ class MusicPlayer:
                 callback()
         typing()
 
+    def sing(self):
+        lyrics = [
+            ("Véu e grinalda", 100),
+            ("Lua de mel", 100),
+            ("", 500),
+            ("Chuva de arroz e tudo depois", 70),
+            ("Dama de honra pega o buquê", 70),
+            ("", 500),
+            ("Ninguém mais feliz que eu e você...", 80),
+        ]
 
+        def next_line(index=0):
+            if index >= len(lyrics):
+                return
+            texto, velocidade = lyrics[index]
+            self.write(
+                texto,
+                self.lyric,
+                velocidade,
+                callback=lambda: self.root.after(
+                    700,
+                    lambda: next_line(index + 1)
+                )
+            )
+        next_line()
 
 root = tk.Tk()
 
