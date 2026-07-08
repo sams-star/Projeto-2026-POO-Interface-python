@@ -1,8 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageFilter, ImageDraw
-import pygame
-import os
+from PIL import Image, ImageTk, ImageFilter
 
 WIDTH = 360
 HEIGHT = 600
@@ -15,31 +13,11 @@ class MusicPlayer:
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
 
-        pygame.mixer.init()
-
-        self.atual_song = "aiaiamor.mp3"
         self.playing = False
-        self.paused = False
         self.angle = 0
 
-        def make_image_circular(image_path, size):
-            img = Image.open(image_path).convert("RGBA")
-            img = img.resize(size, Image.Resampling.LANCZOS) 
-
-            
-            mask = Image.new("L", size, 0)
-            draw = ImageDraw.Draw(mask)
-            
-            
-            draw.ellipse((2, 2, size[0]-2, size[1]-2), fill=255)
-
-            
-            circular_img = Image.new("RGBA", size, (0, 0, 0, 0)) 
-            circular_img.paste(img, (0, 0), mask=mask)
-            return circular_img
-
         #gif
-        self.gif = Image.open("slah.gif")
+        self.gif = Image.open("maisninquem.gif")
         self.frames = []
         
         try:
@@ -73,10 +51,8 @@ class MusicPlayer:
             outline=""
         )
 
-        tamanho_foto = (220, 220)
-
         # Capa
-        self.original_cover = Image.open("bandaft.jpg").resize((220, 220))
+        self.original_cover = Image.open("maisninquem.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
@@ -85,16 +61,13 @@ class MusicPlayer:
             image=self.cover
         )
 
-        nome_exibicao = os.path.splitext(self.atual_song)[0].replace("_", " ").title()
-
+        # Nome da musiguinha
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
             text="",
             fill="white",
-            font=("Arial", 16, "bold"),
-            width=300,
-            justify="center"
+            font=("Arial", 16, "bold")
         )
 
         self.artist = self.canvas.create_text(
@@ -106,7 +79,7 @@ class MusicPlayer:
         )
 
         self.write(
-            "Sam e Caty",
+            "Mais ninquem",
             self.music_title,
             60,
             callback=lambda: self.write(
@@ -116,9 +89,10 @@ class MusicPlayer:
             )
         )
 
+        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   
+            troughcolor="#05042E",   # fundo
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -134,7 +108,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        
+        # Letras
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -145,7 +119,7 @@ class MusicPlayer:
             justify="center"
         )
 
-      
+        # Play
         self.play = tk.Button(
             root,
             text="▶",
@@ -155,47 +129,21 @@ class MusicPlayer:
             command=self.toggle_music
         )
 
-        def toggle_music(self):
-            if not os.path.exists(self.atual_song):
-                self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
-                return
-
-        self.playing = not self.playing
-
-        if self.playing:
-            self.play.config(text="⏸")
-            
-            if not self.paused:
-                pygame.mixer.music.load(self.atual_song)
-                pygame.mixer.music.play()
-            else:
-                pygame.mixer.music.unpause()
-                self.paused = False
-
-
-            self.rotate()
-            self.progress_bar()
-            
-        else:
-            self.play.config(text="▶")
-            pygame.mixer.music.pause()
-            self.paused = True
-
         self.canvas.create_window(
             WIDTH // 2,
             530,
             window=self.play
         )
 
-    
+    #A ANIMAÇÃO DO GIF 
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        
+        # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
         self.root.after(90, self.animate_bg)
 
-    def rotate(self): 
+    def rotate(self): #animaçãozinha DA FOTO
         if not self.playing:
             return
         self.angle = (self.angle + 3) % 360
@@ -208,8 +156,6 @@ class MusicPlayer:
         )
         self.root.after(75, self.rotate)
 
-
-
     def progress_bar(self):
         if not self.playing:
             return
@@ -220,7 +166,16 @@ class MusicPlayer:
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
 
+    def toggle_music(self):
+        self.playing = not self.playing
 
+        if self.playing:
+            self.play.config(text="⏸")
+            self.rotate()
+            self.progress_bar()
+            self.sing()
+        else:
+            self.play.config(text="▶")
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
@@ -237,7 +192,31 @@ class MusicPlayer:
                 callback()
         typing()
 
+    def sing(self):
+        lyrics = [
+            ("Véu e grinalda", 100),
+            ("Lua de mel", 100),
+            ("", 500),
+            ("Chuva de arroz e tudo depois", 70),
+            ("Dama de honra pega o buquê", 70),
+            ("", 500),
+            ("Ninguém mais feliz que eu e você...", 80),
+        ]
 
+        def next_line(index=0):
+            if index >= len(lyrics):
+                return
+            texto, velocidade = lyrics[index]
+            self.write(
+                texto,
+                self.lyric,
+                velocidade,
+                callback=lambda: self.root.after(
+                    700,
+                    lambda: next_line(index + 1)
+                )
+            )
+        next_line()
 
 root = tk.Tk()
 
