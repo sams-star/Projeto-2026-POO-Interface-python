@@ -7,14 +7,21 @@ import os
 WIDTH = 360
 HEIGHT = 600
 
-class MusicPlayer:
-    def __init__(self, janela):
-        self.janela = janela
-        self.janela.title("SpotTI")
-        self.janela.geometry(f"{WIDTH}x{HEIGHT}")
-        self.janela.resizable(False, False)
+class Play_BringMeToLife:
+    def __init__(self, master):
+        self.root = tk.Toplevel(master)
+        self.root.title("SpotTI")
+        self.root.geometry(f"{WIDTH}x{HEIGHT}")
+        self.root.resizable(False, False)
 
-       
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Custom.Horizontal.TProgressbar",
+            troughcolor="#05042E",
+            background="white"
+        )
+
         pygame.mixer.init()
 
         self.atual_song = "Bring me to life.mp3"
@@ -53,7 +60,7 @@ class MusicPlayer:
         self.current_frame = 0
         self.bg = self.frames[self.current_frame]
 
-        self.canvas = tk.Canvas(janela, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         
@@ -104,7 +111,7 @@ class MusicPlayer:
 
         
         self.progress = ttk.Progressbar(
-            janela,
+            self.root,
             length=270,
             maximum=100,
             style="Custom.Horizontal.TProgressbar"
@@ -127,7 +134,7 @@ class MusicPlayer:
 
 
         self.play = tk.Button(
-            janela,
+            self.root,
             text="▶",
             font=("Arial", 22),
             bg="#120d42",
@@ -174,7 +181,7 @@ class MusicPlayer:
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        self.janela.after(90, self.animate_bg)
+        self.root.after(90, self.animate_bg)
 
     def rotate(self): 
         if not self.playing or self.paused:
@@ -187,7 +194,7 @@ class MusicPlayer:
             self.cover_id,
             image=self.cover
         )
-        self.janela.after(75, self.rotate)
+        self.root.after(75, self.rotate)
 
     
     def progress_bar(self):
@@ -198,17 +205,4 @@ class MusicPlayer:
         if value > 100:
             value = 0
         self.progress["value"] = value
-        self.janela.after(95, self.progress_bar)
-
-janela = tk.Tk()
-
-style = ttk.Style(janela)
-style.theme_use("clam")
-style.configure(
-    "Custom.Horizontal.TProgressbar",
-    troughcolor="#05042E",
-    background="white" 
-)
-
-app = MusicPlayer(janela)
-janela.mainloop()
+        self.root.after(95, self.progress_bar)

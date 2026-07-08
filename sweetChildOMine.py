@@ -7,24 +7,31 @@ import os
 WIDTH = 360
 HEIGHT = 600
 
-class MusicPlayer:
-    def __init__(self, root):
-        self.root = root
+class Play_SweetChildoMine:
+    def __init__(self, master):
+        self.root = tk.Toplevel(master)
         self.root.title("SpotTI")
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
 
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Custom.Horizontal.TProgressbar",
+            troughcolor="#05042E",
+            background="white"
+        )
+
        
         pygame.mixer.init()
 
-        self.atual_song = "sweet-child-o-mine.mp3"
+        self.atual_song = "Sweet child o' mine.mp3"
         self.playing = False
         self.paused = False
         self.angle = 0
 
         
         def make_image_circular(image_path, size):
-            """Abre a imagem, redimensiona, e aplica uma máscara para torná-la circular com anti-aliasing."""
             img = Image.open(image_path).convert("RGBA")
             img = img.resize(size, Image.Resampling.LANCZOS) 
 
@@ -54,7 +61,7 @@ class MusicPlayer:
         self.current_frame = 0
         self.bg = self.frames[self.current_frame]
 
-        self.canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         
@@ -98,14 +105,14 @@ class MusicPlayer:
 
         self.artist = self.canvas.create_text(
             WIDTH // 2, 375,
-            text="SpotTI Player",
+            text="Guns N' Roses",
             fill="#bbbbbb",
             font=("Arial", 11)
         )
 
         
         self.progress = ttk.Progressbar(
-            root,
+            self.root,
             length=270,
             maximum=100,
             style="Custom.Horizontal.TProgressbar"
@@ -127,7 +134,7 @@ class MusicPlayer:
         )
 
         self.play = tk.Button(
-            root,
+            self.root,
             text="▶",
             font=("Arial", 22),
             bg="#120d42",
@@ -196,19 +203,3 @@ class MusicPlayer:
             value = 0
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
-
-
-
-
-root = tk.Tk()
-
-style = ttk.Style(root)
-style.theme_use("clam")
-style.configure(
-    "Custom.Horizontal.TProgressbar",
-    troughcolor="#05042E",
-    background="white" 
-)
-
-app = MusicPlayer(root)
-root.mainloop()

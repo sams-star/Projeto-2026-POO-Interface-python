@@ -34,7 +34,7 @@ tk.Label(
 ).pack(anchor="w", padx=20)
 
 
-
+# para saber o que cada playlist abre
 def playlist(nome, img_path, arquivo_py):
     frame = tk.Frame(root, bg="#121212")
     frame.pack(fill="x", pady=6, padx=15)
@@ -66,8 +66,7 @@ playlist("🎵 Wonderwall - Oasis", "Wonderwall.jpg", "wonderwall.py")
 playlist("Bring me to life - Evanescence", "evanescence.jpg", "bringMeToLife.py")
 playlist("AAAAAAAA", "home.jpg", "teste main.py")
 playlist("Sam e Caty", "home.jpg", "teste main.py")
-playlist("Mais ninquem", "maisninquem.jpg", "maisninquem.py")
-playlist("Salve suas musicas", "musica.jpg", "salvar_musicas.py")
+playlist("Salve suas musicas", "music.jpg", "salvar_musicas.py")
 
 
 root.mainloop()
