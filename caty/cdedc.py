@@ -135,15 +135,15 @@ class MusicPlayer:
             window=self.play
         )
 
-    #A ANIMAÇÃO DO GIF 
+    
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
+        
         self.root.after(90, self.animate_bg)
 
-    def rotate(self): #animaçãozinha DA FOTO
+    def rotate(self): 
         if not self.playing:
             return
         self.angle = (self.angle + 3) % 360

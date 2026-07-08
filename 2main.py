@@ -14,16 +14,16 @@ class MusicPlayer:
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
 
-        # Inicializa o Mixer do Pygame
+       
         pygame.mixer.init()
 
-        # Configuração da música predefinida (deve estar na mesma pasta do script)
+       
         self.atual_song = "musica.mp3"
         self.playing = False
         self.paused = False
         self.angle = 0
 
-        # Configuração do GIF de fundo
+ 
         self.gif = Image.open("slah.gif")
         self.frames = []
         try:
@@ -40,13 +40,13 @@ class MusicPlayer:
         self.canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        # Coloca o frame de fundo
+       
         self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
 
-        # Inicia loop do gif
+       
         self.animate_bg()
 
-        # Filtro escuro por cima do GIF
+        
         self.canvas.create_rectangle(
             0, 0, WIDTH, HEIGHT,
             fill="#030303",
@@ -54,7 +54,7 @@ class MusicPlayer:
             outline=""
         )
 
-        # Capa do Álbum
+       
         self.original_cover = Image.open("gatito.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
@@ -63,7 +63,7 @@ class MusicPlayer:
             image=self.cover
         )
 
-        # Nome da música fixo na interface (remove a extensão .mp3 para estética)
+       
         nome_exibicao = os.path.splitext(self.atual_song)[0].replace("_", " ").title()
 
         self.music_title = self.canvas.create_text(
@@ -82,7 +82,7 @@ class MusicPlayer:
             font=("Arial", 11)
         )
 
-        # Barra de progresso customizada
+      
         style.configure(
             "Custom.Horizontal.TProgressbar",
             troughcolor="#05042E",
@@ -100,7 +100,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        # Letras da música
+       
         self.lyric = self.canvas.create_text(
             WIDTH // 2, 470,
             text="",
@@ -110,7 +110,6 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Botão Play/Pause
         self.play = tk.Button(
             root,
             text="▶",
@@ -125,9 +124,8 @@ class MusicPlayer:
             window=self.play
         )
 
-    # Lógica de Play e Pause Real
     def toggle_music(self):
-        # Verifica se o arquivo de música realmente existe antes de tentar tocar
+       
         if not os.path.exists(self.atual_song):
             self.canvas.itemconfig(self.music_title, text="Arquivo 'musica.mp3' não encontrado!")
             return
@@ -144,7 +142,7 @@ class MusicPlayer:
                 pygame.mixer.music.unpause()
                 self.paused = False
 
-            # Dispara as animações visuais
+           
             self.rotate()
             self.progress_bar()
             self.sing()
@@ -153,14 +151,14 @@ class MusicPlayer:
             pygame.mixer.music.pause()
             self.paused = True
 
-    # Animação do GIF de fundo
+    
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
         self.root.after(90, self.animate_bg)
 
-    # Animação de rotação da Capa
+   
     def rotate(self): 
         if not self.playing or self.paused:
             return
@@ -174,7 +172,7 @@ class MusicPlayer:
         )
         self.root.after(75, self.rotate)
 
-    # Simulação da Barra de Progresso
+    
     def progress_bar(self):
         if not self.playing or self.paused:
             return
@@ -185,7 +183,7 @@ class MusicPlayer:
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
 
-    # Efeito de digitação de texto
+
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
             if index <= len(text):
@@ -201,7 +199,7 @@ class MusicPlayer:
                 callback()
         typing()
 
-    # Exibição de Letras Dinâmicas
+   
     def sing(self):
         if not self.playing or self.paused:
             return
@@ -231,7 +229,7 @@ class MusicPlayer:
             )
         next_line()
 
-# Inicialização do App
+
 root = tk.Tk()
 
 style = ttk.Style(root)
