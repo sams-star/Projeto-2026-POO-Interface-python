@@ -17,7 +17,7 @@ class MusicPlayer:
         self.angle = 0
 
         #gif
-        self.gif = Image.open("slah.gif")
+        self.gif = Image.open("maisninquem.gif")
         self.frames = []
         
         try:
@@ -52,7 +52,7 @@ class MusicPlayer:
         )
 
         # Capa
-        self.original_cover = Image.open("bandaft.jpg").resize((220, 220))
+        self.original_cover = Image.open("maisninquem.gif").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
@@ -79,7 +79,7 @@ class MusicPlayer:
         )
 
         self.write(
-            "Sam e Caty",
+            "Mais Ninquém",
             self.music_title,
             60,
             callback=lambda: self.write(
@@ -91,7 +91,7 @@ class MusicPlayer:
 
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   
+            troughcolor="#2E0404",   
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -123,7 +123,7 @@ class MusicPlayer:
             root,
             text="▶",
             font=("Arial", 22),
-            bg="#120d42",
+            bg="#550f0f",
             fg="white",
             command=self.toggle_music
         )
