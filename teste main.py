@@ -17,9 +17,9 @@ class MusicPlayer:
         self.playing = False
         self.angle = 0
 
-        # fundo imagem
+      
         bg = Image.open("home.jpg").resize((WIDTH, HEIGHT))
-        bg = bg.filter(ImageFilter.GaussianBlur(radius=5)) #desfocar fundo
+        bg = bg.filter(ImageFilter.GaussianBlur(radius=5))
         self.bg = ImageTk.PhotoImage(bg)
 
         self.canvas = tk.Canvas(
@@ -41,7 +41,7 @@ class MusicPlayer:
             outline=""
         )
 
-        # Capa
+  
         self.original_cover = Image.open("home.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
@@ -51,7 +51,7 @@ class MusicPlayer:
             image=self.cover
         )
 
-        # Nome da musiguinha
+   
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -79,11 +79,9 @@ class MusicPlayer:
             )
         )
 
-        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#3D0505",   # fundo
-            #corzita que cresce
+            troughcolor="#3D0505", 
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -99,7 +97,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        # Letras
+     
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -110,7 +108,7 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Play
+   
         self.play = tk.Button(
             root,
             text="▶",
@@ -128,7 +126,7 @@ class MusicPlayer:
 
 
 
-    def rotate(self): #animaçãozinha
+    def rotate(self):
 
         if not self.playing:
             return
@@ -174,7 +172,7 @@ class MusicPlayer:
                     item,
                     text=text[:index]
                 )
-                #velocidade da animação da letra
+                
                 self.root.after(
                     speed,
                     lambda: typing(index + 1)
@@ -225,5 +223,3 @@ MusicPlayer(root)
 
 root.mainloop()
 
-MusicPlayer(root)
-root.mainloop()
