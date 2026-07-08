@@ -1,20 +1,41 @@
 import tkinter as tk
 from tkinter import ttk
-from PIL import Image, ImageTk, ImageFilter
+from PIL import Image, ImageTk, ImageDraw
 
 WIDTH = 360
 HEIGHT = 600
 
-class MusicPlayer:
+class Play_MaisNinguem:
 
-    def __init__(self, root):
-        self.root = root
+    def __init__(self, master):
+        self.root = tk.Toplevel(master)
         self.root.title("SpotTI")
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
 
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Custom.Horizontal.TProgressbar",
+            troughcolor="#05042E",
+            background="white"
+        )
+
         self.playing = False
         self.angle = 0
+
+        def make_image_circular(image_path, size):
+            img = Image.open(image_path).convert("RGBA")
+            img = img.resize(size, Image.Resampling.LANCZOS)
+
+            mask = Image.new("L", size, 0)
+            draw = ImageDraw.Draw(mask)
+            draw.ellipse((2, 2, size[0]-2, size[1]-2), fill=255)
+
+            circular_img = Image.new("RGBA", size, (0, 0, 0, 0))
+            circular_img.paste(img, (0, 0), mask)
+
+            return circular_img    
 
         #gif
         self.gif = Image.open("maisninquem.gif")
@@ -31,7 +52,7 @@ class MusicPlayer:
         self.current_frame = 0
         self.bg = self.frames[self.current_frame]
 
-        self.canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
         # Coloca o frame
@@ -52,8 +73,14 @@ class MusicPlayer:
         )
 
         # Capa
-        self.original_cover = Image.open("maisninquem.jpg").resize((220, 220))
+        tamanho_foto = (220, 220)
+
+        self.original_cover = make_image_circular(
+        "maisninquem.jpg",
+        tamanho_foto
+        )
         self.cover = ImageTk.PhotoImage(self.original_cover)
+
 
         self.cover_id = self.canvas.create_image(
             WIDTH // 2,
@@ -96,7 +123,7 @@ class MusicPlayer:
             background="white"       
         )
         self.progress = ttk.Progressbar(
-            root,
+            self.root,
             length=270,
             maximum=100,
             style="Custom.Horizontal.TProgressbar"
@@ -121,7 +148,7 @@ class MusicPlayer:
 
         # Play
         self.play = tk.Button(
-            root,
+            self.root,
             text="▶",
             font=("Arial", 22),
             bg="#120d42",
@@ -143,11 +170,12 @@ class MusicPlayer:
         # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
         self.root.after(90, self.animate_bg)
 
-    def rotate(self): #animaçãozinha DA FOTO
+     #animaçãozinha DA FOTO
+    def rotate(self):
         if not self.playing:
             return
         self.angle = (self.angle + 3) % 360
-        img = self.original_cover.rotate(-self.angle)
+        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC)
         self.cover = ImageTk.PhotoImage(img)
 
         self.canvas.itemconfig(
@@ -217,17 +245,3 @@ class MusicPlayer:
                 )
             )
         next_line()
-
-root = tk.Tk()
-
-style = ttk.Style(root)
-style.theme_use("clam")
-
-style.configure(
-    "Custom.Horizontal.TProgressbar",
-    troughcolor ="#555555",
-    background="white"
-)
-
-MusicPlayer(root)
-root.mainloop()

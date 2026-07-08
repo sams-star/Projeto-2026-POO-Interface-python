@@ -4,8 +4,9 @@ from PIL import Image, ImageTk
 from sweetChildoMine import Play_SweetChildoMine
 from wonderwall import Play_Wonderwall
 from bringMeToLife import Play_BringMeToLife
-from mais_talvez import Play_MaisNinguem
+from Mais_Ninquem import Play_MaisNinguem
 from AiAiAmor import Play_AiAiAmor
+from salvar_musicas2 import SalvarMusicas
 
 WIDTH = 360
 HEIGHT = 600
@@ -98,6 +99,11 @@ def main():
         lambda: Play_BringMeToLife(janela)
     )
 
+    playlist(
+        "Salve suas musicas",
+        "musica.jpg",
+        lambda: SalvarMusicas(janela)
+    )
     
 
     janela.mainloop()
