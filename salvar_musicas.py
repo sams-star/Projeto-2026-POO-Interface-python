@@ -6,7 +6,7 @@ import os
 WIDTH = 360
 HEIGHT = 600
 
-# Inicialização da Janela com design SpotTI
+
 janela = tk.Tk()
 janela.title('SpotTI - Minhas Músicas')
 janela.geometry(f"{WIDTH}x{HEIGHT}")
@@ -19,7 +19,6 @@ songs = []
 atual_song = ""
 paused = False
 
-# Título da Interface
 tk.Label(
     janela, 
     text="Suas Músicas", 
@@ -28,12 +27,12 @@ tk.Label(
     font=("Arial", 18, "bold")
 ).pack(pady=15)
 
-# Lista de Músicas Customizada
+
 songlist = tk.Listbox(
     janela, 
     bg="#1e1e1e", 
     fg="white", 
-    selectbackground="#1db954", # Cor de destaque (estilo Spotify)
+    selectbackground="#1db954", 
     selectforeground="white",
     bd=0,
     highlightthickness=0,
@@ -43,7 +42,7 @@ songlist = tk.Listbox(
 )
 songlist.pack(pady=10, padx=20, fill="both", expand=True)
 
-# Botão para selecionar a pasta (substituindo a barra de menu por um botão limpo)
+
 def carregar_musica():
     global atual_song
     janela.directory = filedialog.askdirectory(parent=janela)
@@ -81,7 +80,7 @@ btn_carregar = tk.Button(
 )
 btn_carregar.pack(pady=10)
 
-# Controle de mídia
+
 control_frame = tk.Frame(janela, bg="#121212")
 control_frame.pack(pady=15)
 
@@ -90,7 +89,7 @@ def play_music():
     if not songs:
         return
         
-    # Pega a música selecionada na lista pelo usuário em tempo real
+  
     try:
         selecionada = songlist.curselection()[0]
         atual_song = songs[selecionada]
@@ -135,7 +134,7 @@ def prev_music():
     except:
         pass
 
-# Botões de mídia estilizados em formato texto/emoji modernos (dispensando imagens externas obrigatoriamente)
+
 estilo_botoes = {
     "bg": "#121212", "fg": "white", "bd": 0, "font": ("Arial", 18),
     "activebackground": "#121212", "activeforeground": "#1db954"
