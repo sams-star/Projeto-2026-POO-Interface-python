@@ -192,31 +192,7 @@ class MusicPlayer:
                 callback()
         typing()
 
-    def sing(self):
-        lyrics = [
-            ("Véu e grinalda", 100),
-            ("Lua de mel", 100),
-            ("", 500),
-            ("Chuva de arroz e tudo depois", 70),
-            ("Dama de honra pega o buquê", 70),
-            ("", 500),
-            ("Ninguém mais feliz que eu e você...", 80),
-        ]
 
-        def next_line(index=0):
-            if index >= len(lyrics):
-                return
-            texto, velocidade = lyrics[index]
-            self.write(
-                texto,
-                self.lyric,
-                velocidade,
-                callback=lambda: self.root.after(
-                    700,
-                    lambda: next_line(index + 1)
-                )
-            )
-        next_line()
 
 root = tk.Tk()
 

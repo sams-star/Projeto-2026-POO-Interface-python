@@ -201,9 +201,6 @@ class MusicPlayer:
         self.progress["value"] = value
         self.janela.after(95, self.progress_bar)
 
-
-
-
 janela = tk.Tk()
 
 style = ttk.Style(janela)
