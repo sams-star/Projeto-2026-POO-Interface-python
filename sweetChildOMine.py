@@ -98,7 +98,7 @@ class MusicPlayer:
 
         self.artist = self.canvas.create_text(
             WIDTH // 2, 375,
-            text="SpotTI",
+            text="SpotTI Player",
             fill="#bbbbbb",
             font=("Arial", 11)
         )
