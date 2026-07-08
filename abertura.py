@@ -34,7 +34,7 @@ tk.Label(
 ).pack(anchor="w", padx=20)
 
 
-# para saber o que cada playlist abre
+
 def playlist(nome, img_path, arquivo_py):
     frame = tk.Frame(root, bg="#121212")
     frame.pack(fill="x", pady=6, padx=15)

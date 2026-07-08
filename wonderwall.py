@@ -24,7 +24,6 @@ class MusicPlayer:
 
         
         def make_image_circular(image_path, size):
-            """Abre a imagem, redimensiona, e aplica uma máscara para torná-la circular com anti-aliasing."""
             img = Image.open(image_path).convert("RGBA")
             img = img.resize(size, Image.Resampling.LANCZOS) 
 
@@ -126,14 +125,14 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Botão Play/Pause
+   
         self.play = tk.Button(
             root,
             text="▶",
             font=("Arial", 22),
             bg="#120d42",
             fg="white",
-            bd=0, # Remove borda do botão para ficar mais limpo
+            bd=0, 
             highlightthickness=0,
             command=self.toggle_music
         )
@@ -170,19 +169,18 @@ class MusicPlayer:
             pygame.mixer.music.pause()
             self.paused = True
 
-    # Animação do GIF de fundo (sem mudanças)
+ 
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
         self.root.after(90, self.animate_bg)
 
-    # Animação de rotação da Capa (sem mudanças no algoritmo, mas agora gira a imagem redonda)
     def rotate(self): 
         if not self.playing or self.paused:
             return
         self.angle = (self.angle + 3) % 360
-        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC) # Gira com suavização
+        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC) 
         self.cover = ImageTk.PhotoImage(img)
 
         self.canvas.itemconfig(
@@ -191,7 +189,7 @@ class MusicPlayer:
         )
         self.root.after(75, self.rotate)
 
-    # Simulação da Barra de Progresso (sem mudanças)
+
     def progress_bar(self):
         if not self.playing or self.paused:
             return

@@ -61,7 +61,7 @@ class MusicPlayer:
             image=self.cover
         )
 
-        # Nome da musiguinha
+    
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -89,10 +89,9 @@ class MusicPlayer:
             )
         )
 
-        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   # fundo
+            troughcolor="#05042E",   
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -108,7 +107,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        # Letras
+        
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -119,7 +118,7 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Play
+      
         self.play = tk.Button(
             root,
             text="▶",
@@ -145,6 +144,20 @@ class MusicPlayer:
 
     def rotate(self): 
         if not self.playing:
+            return
+        self.angle = (self.angle + 3) % 360
+        img = self.original_cover.rotate(-self.angle)
+        self.cover = ImageTk.PhotoImage(img)
+
+        self.canvas.itemconfig(
+            self.cover_id,
+            image=self.cover
+        )
+        self.root.after(75, self.rotate)
+
+
+    def rotate(self): 
+        if not self.playing or self.paused:
             return
         self.angle = (self.angle + 3) % 360
         img = self.original_cover.rotate(-self.angle)

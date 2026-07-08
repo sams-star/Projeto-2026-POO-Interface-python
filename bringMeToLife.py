@@ -24,7 +24,6 @@ class MusicPlayer:
 
         
         def make_image_circular(image_path, size):
-            """Abre a imagem, redimensiona, e aplica uma máscara para torná-la circular com anti-aliasing."""
             img = Image.open(image_path).convert("RGBA")
             img = img.resize(size, Image.Resampling.LANCZOS) 
 
@@ -126,7 +125,7 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Botão Play/Pause
+
         self.play = tk.Button(
             janela,
             text="▶",
@@ -181,7 +180,7 @@ class MusicPlayer:
         if not self.playing or self.paused:
             return
         self.angle = (self.angle + 3) % 360
-        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC) # Gira com suavização
+        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC) 
         self.cover = ImageTk.PhotoImage(img)
 
         self.canvas.itemconfig(
