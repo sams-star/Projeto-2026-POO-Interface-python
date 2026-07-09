@@ -228,24 +228,25 @@ class Play_AiAiAmor:
     def sing(self):
         self.singing = True
         lyrics = [
+            ("", 20000),
             ("Ei, fiz questão da promessa lembrar", 90),
-            ("Tu jurou minha mão não soltar", 90),
-            ("E se foi junto dela", 90),
-            ("", 500),
-            ("Ei, cê não sabe a falta que faz", 90),
-            ("Será que teus dias tão iguais?", 90),
-            ("Eu me pego pensando", 90),
-            ("", 500),
+            ("Tu jurou minha mão não soltar", 70),
+            ("E se foi junto dela", 80),
+            ("", 300),
+            ("Ei, cê não sabe a falta que faz", 70),
+            ("Será que teus dias tão iguais?", 50),
+            ("Eu me pego pensando", 60),
+            ("", 100),
             ("Ai, amor", 80),
-            ("Será que tu divide a dor", 80),
-            ("Do teu peito cansado", 80),
-            ("Com alguém que não vai te sarar?", 80),
-            ("", 500),
-            ("Meu amor", 80),
-            ("Eu vivo no aguardo", 80),
-            ("De ver você voltando", 80),
-            ("Cruzando a porta, parararara", 80),
-            ("", 500),
+            ("Será que tu divide a dor", 100),
+            ("Do teu peito cansado", 90),
+            ("Com alguém que não vai te sarar?", 100),
+            ("", 3500),
+            ("Meu amor", 100),
+            ("Eu vivo no aguardo", 100),
+            ("De ver você voltando", 100),
+            ("Cruzando a porta, parararara", 90),
+            ("", 10000),
             ("Ei, diz pra mim o que eu quero escutar", 90),
             ("Só você sabe adivinhar", 90),
             ("Meus desejos secretos", 90),
@@ -313,9 +314,3 @@ class Play_AiAiAmor:
         
         next_line()
 
-# Teste para rodar o app direto se quiser
-if __name__ == "__main__":
-    root = tk.Tk()
-    root.withdraw() # Esconde a janela principal do Tkinter
-    app = Play_AiAiAmor(root)
-    root.mainloop()
