@@ -1,13 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-<<<<<<< Updated upstream
-from PIL import Image, ImageTk, ImageDraw
-import pygame
-import os
-=======
 from PIL import Image, ImageTk, ImageFilter
 
->>>>>>> Stashed changes
 
 WIDTH = 360
 HEIGHT = 600
@@ -25,25 +19,12 @@ class MusicPlayer:
         self.playing = False
         self.paused = False
         self.angle = 0
+        
 
-        def make_image_circular(image_path, size):
-            img = Image.open(image_path).convert("RGBA")
-            img = img.resize(size, Image.Resampling.LANCZOS) 
-
-            
-            mask = Image.new("L", size, 0)
-            draw = ImageDraw.Draw(mask)
-            
-            
-            draw.ellipse((2, 2, size[0]-2, size[1]-2), fill=255)
-
-            
-            circular_img = Image.new("RGBA", size, (0, 0, 0, 0)) 
-            circular_img.paste(img, (0, 0), mask=mask)
-            return circular_img
+    
 
         #gif
-        self.gif = Image.open("maisninquem.gif")
+        self.gif = Image.open("slah.gif")
         self.frames = []
         
         try:
@@ -80,7 +61,7 @@ class MusicPlayer:
         tamanho_foto = (220, 220)
 
         # Capa
-        self.original_cover = Image.open("maisninquem.gif").resize((220, 220))
+        self.original_cover = Image.open("bandaft.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
@@ -110,7 +91,7 @@ class MusicPlayer:
         )
 
         self.write(
-            "Mais Ninquém",
+            "Sam e Caty",
             self.music_title,
             60,
             callback=lambda: self.write(
@@ -122,7 +103,7 @@ class MusicPlayer:
 
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#2E0404",   
+            troughcolor="#05042E",   
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -154,49 +135,17 @@ class MusicPlayer:
             root,
             text="▶",
             font=("Arial", 22),
-            bg="#550f0f",
+            bg="#120d42",
             fg="white",
             command=self.toggle_music
         )
 
-<<<<<<< Updated upstream
-        def toggle_music(self):
-            if not os.path.exists(self.atual_song):
-                self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
-                return
-
-        self.playing = not self.playing
-
-        if self.playing:
-            self.play.config(text="⏸")
-            
-            if not self.paused:
-                pygame.mixer.music.load(self.atual_song)
-                pygame.mixer.music.play()
-            else:
-                pygame.mixer.music.unpause()
-                self.paused = False
-
-
-            self.rotate()
-            self.progress_bar()
-            
-        else:
-            self.play.config(text="▶")
-            pygame.mixer.music.pause()
-            self.paused = True
-
-=======
->>>>>>> Stashed changes
         self.canvas.create_window(
             WIDTH // 2,
             530,
             window=self.play
         )
-<<<<<<< Updated upstream
-=======
 
->>>>>>> Stashed changes
 
     
     def animate_bg(self):
