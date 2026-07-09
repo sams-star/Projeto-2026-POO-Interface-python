@@ -77,7 +77,7 @@ def main():
         lambda: Play_SweetChildoMine(janela)
     )
 
-    playlist("Mais ninguém",
+    playlist("Evidências",
              "maisninquem.jpg",
              lambda: Play_MaisNinguem(janela)
              )

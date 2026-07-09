@@ -25,7 +25,7 @@ class Play_AiAiAmor:
 
         pygame.mixer.init()
 
-        self.atual_song = "Ai Amor.mp3"
+        self.atual_song = "Ai Amor2.mp3"
         self.playing = False
         self.paused = False
         self.singing = False 
@@ -45,7 +45,7 @@ class Play_AiAiAmor:
 
             return circular_img    
 
-        # gif
+ 
         self.gif = Image.open("ponyo.gif")
         self.frames = []
         
@@ -63,13 +63,13 @@ class Play_AiAiAmor:
         self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        # Coloca o frame
+      
         self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
 
-        # loop - gif
+       
         self.animate_bg()
 
-        # filtro preto
+       
         self.canvas.create_rectangle(
             0,
             0,
@@ -80,7 +80,7 @@ class Play_AiAiAmor:
             outline=""
         )
 
-        # Capa
+       
         tamanho_foto = (220, 220)
 
         self.original_cover = make_image_circular(
@@ -95,7 +95,6 @@ class Play_AiAiAmor:
             image=self.cover
         )
 
-        # Nome da musiguinha
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -112,10 +111,10 @@ class Play_AiAiAmor:
             font=("Arial", 11)
         )
 
-        # Barra de progresso
+      
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   # fundo
+            troughcolor="#05042E",  
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -131,7 +130,7 @@ class Play_AiAiAmor:
             window=self.progress
         )
 
-        # Letras (Criado ANTES do efeito write rodar)
+    
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -142,7 +141,7 @@ class Play_AiAiAmor:
             justify="center"
         )
 
-        # Play
+     
         self.play = tk.Button(
             self.root,
             text="▶",
@@ -158,7 +157,6 @@ class Play_AiAiAmor:
             window=self.play
         )
 
-        # EXECUTAR O EFEITO WRITE AQUI NO FINAL DO INIT
         self.write(
             "Ai, Amor",
             self.music_title,
@@ -170,14 +168,14 @@ class Play_AiAiAmor:
             )
         )
 
-    # A ANIMAÇÃO DO GIF 
+ 
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
         self.root.after(90, self.animate_bg)
 
-    # animaçãozinha DA FOTO
+  
     def rotate(self):
         if not self.playing:
             return
@@ -230,7 +228,7 @@ class Play_AiAiAmor:
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
-            # Se o usuário pausar a música, interrompe o efeito de digitação atual das letras
+     
             if not self.playing and item == self.lyric:
                 return
             if index <= len(text):
@@ -311,13 +309,13 @@ class Play_AiAiAmor:
         ]
 
         def next_line():
-            # Se pausar, para a execução e guarda o ponto atual
+           
             if not self.playing:
                 self.singing = False
                 return
                 
             if self.lyric_index >= len(lyrics):
-                self.lyric_index = 0 # Reinicia quando a música acabar
+                self.lyric_index = 0 
                 self.singing = False
                 return
 

@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw
+import pygame
+import os
 
 WIDTH = 360
 HEIGHT = 600
@@ -21,8 +23,14 @@ class Play_MaisNinguem:
             background="white"
         )
 
+        pygame.mixer.init()
+
+        self.atual_song = "Evidencias.mp3"
         self.playing = False
+        self.paused = False
+        self.singing = False 
         self.angle = 0
+        self.lyric_index = 0 
 
         def make_image_circular(image_path, size):
             img = Image.open(image_path).convert("RGBA")
@@ -37,7 +45,7 @@ class Play_MaisNinguem:
 
             return circular_img    
 
-        #gif
+     
         self.gif = Image.open("maisninquem.gif")
         self.frames = []
         
@@ -55,13 +63,13 @@ class Play_MaisNinguem:
         self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-        # Coloca o frame
+    
         self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
 
-        # loop - gif
+     
         self.animate_bg()
 
-        # filtro preto
+      
         self.canvas.create_rectangle(
             0,
             0,
@@ -72,7 +80,7 @@ class Play_MaisNinguem:
             outline=""
         )
 
-        # Capa
+        
         tamanho_foto = (220, 220)
 
         self.original_cover = make_image_circular(
@@ -88,7 +96,7 @@ class Play_MaisNinguem:
             image=self.cover
         )
 
-        # Nome da musiguinha
+       
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -106,20 +114,20 @@ class Play_MaisNinguem:
         )
 
         self.write(
-            "Mais Nínquem",
+            "Evidências",
             self.music_title,
             60,
             callback=lambda: self.write(
-                "SpotTI",
+                "Chitãozinho e Xororó",
                 self.artist,
                 90
             )
         )
 
-        # Barra de progresso
+      
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   # fundo
+            troughcolor="#05042E",  
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -135,7 +143,6 @@ class Play_MaisNinguem:
             window=self.progress
         )
 
-        # Letras
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -146,7 +153,7 @@ class Play_MaisNinguem:
             justify="center"
         )
 
-        # Play
+       
         self.play = tk.Button(
             self.root,
             text="▶",
@@ -162,15 +169,14 @@ class Play_MaisNinguem:
             window=self.play
         )
 
-    #A ANIMAÇÃO DO GIF 
+  
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
-        # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
         self.root.after(90, self.animate_bg)
 
-     #animaçãozinha DA FOTO
+
     def rotate(self):
         if not self.playing:
             return
@@ -195,15 +201,30 @@ class Play_MaisNinguem:
         self.root.after(95, self.progress_bar)
 
     def toggle_music(self):
+        if not os.path.exists(self.atual_song):
+            self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
+            return
+
         self.playing = not self.playing
 
         if self.playing:
             self.play.config(text="⏸")
+            
+            if not self.paused:
+                pygame.mixer.music.load(self.atual_song)
+                pygame.mixer.music.play()
+            else:
+                pygame.mixer.music.unpause()
+                self.paused = False
+
+
             self.rotate()
             self.progress_bar()
-            self.sing()
+            
         else:
             self.play.config(text="▶")
+            pygame.mixer.music.pause()
+            self.paused = True
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
