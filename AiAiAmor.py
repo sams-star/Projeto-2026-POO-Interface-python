@@ -22,7 +22,9 @@ class Play_AiAiAmor:
         )
 
         self.playing = False
+        self.singing = False 
         self.angle = 0
+        self.lyric_index = 0 
 
         def make_image_circular(image_path, size):
             img = Image.open(image_path).convert("RGBA")
@@ -37,8 +39,8 @@ class Play_AiAiAmor:
 
             return circular_img    
 
-        
-        self.gif = Image.open("slah.gif")
+        # gif
+        self.gif = Image.open("ponyo.gif")
         self.frames = []
         
         try:
@@ -55,30 +57,31 @@ class Play_AiAiAmor:
         self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
         self.canvas.pack(fill="both", expand=True)
 
-   
+        # Coloca o frame
         self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
 
-     
+        # loop - gif
         self.animate_bg()
 
+        # filtro preto
         self.canvas.create_rectangle(
             0,
             0,
             WIDTH,
             HEIGHT,
-            fill="#030303",
+            fill="#000000",
             stipple="gray50",
             outline=""
         )
 
+        # Capa
         tamanho_foto = (220, 220)
 
         self.original_cover = make_image_circular(
-        "maisninquem.jpg",
-        tamanho_foto
+            "Anavitória.jpg",
+            tamanho_foto
         )
         self.cover = ImageTk.PhotoImage(self.original_cover)
-
 
         self.cover_id = self.canvas.create_image(
             WIDTH // 2,
@@ -86,7 +89,7 @@ class Play_AiAiAmor:
             image=self.cover
         )
 
-
+        # Nome da musiguinha
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -103,21 +106,10 @@ class Play_AiAiAmor:
             font=("Arial", 11)
         )
 
-        self.write(
-            "Ai,amor",
-            self.music_title,
-            60,
-            callback=lambda: self.write(
-                "ANAVITORIA",
-                self.artist,
-                90
-            )
-        )
-
-
+        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",  
+            troughcolor="#05042E",   # fundo
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -133,7 +125,7 @@ class Play_AiAiAmor:
             window=self.progress
         )
 
-    
+        # Letras (Criado ANTES do efeito write rodar)
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -144,7 +136,7 @@ class Play_AiAiAmor:
             justify="center"
         )
 
-
+        # Play
         self.play = tk.Button(
             self.root,
             text="▶",
@@ -160,14 +152,26 @@ class Play_AiAiAmor:
             window=self.play
         )
 
- 
+        # EXECUTAR O EFEITO WRITE AQUI NO FINAL DO INIT
+        self.write(
+            "Ai, Amor",
+            self.music_title,
+            60,
+            callback=lambda: self.write(
+                "ANAVITÓRIA",
+                self.artist,
+                90
+            )
+        )
+
+    # A ANIMAÇÃO DO GIF 
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
         self.current_frame = (self.current_frame + 1) % len(self.frames)
         self.root.after(90, self.animate_bg)
 
-   
+    # animaçãozinha DA FOTO
     def rotate(self):
         if not self.playing:
             return
@@ -198,12 +202,16 @@ class Play_AiAiAmor:
             self.play.config(text="⏸")
             self.rotate()
             self.progress_bar()
-            self.sing()
+            if not self.singing:
+                self.sing()
         else:
             self.play.config(text="▶")
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
+            # Se o usuário pausar a música, interrompe o efeito de digitação atual das letras
+            if not self.playing and item == self.lyric:
+                return
             if index <= len(text):
                 self.canvas.itemconfig(
                     item,
@@ -218,27 +226,96 @@ class Play_AiAiAmor:
         typing()
 
     def sing(self):
+        self.singing = True
         lyrics = [
-            ("Véu e grinalda", 100),
-            ("Lua de mel", 100),
+            ("Ei, fiz questão da promessa lembrar", 90),
+            ("Tu jurou minha mão não soltar", 90),
+            ("E se foi junto dela", 90),
             ("", 500),
-            ("Chuva de arroz e tudo depois", 70),
-            ("Dama de honra pega o buquê", 70),
+            ("Ei, cê não sabe a falta que faz", 90),
+            ("Será que teus dias tão iguais?", 90),
+            ("Eu me pego pensando", 90),
             ("", 500),
-            ("Ninguém mais feliz que eu e você...", 80),
+            ("Ai, amor", 80),
+            ("Será que tu divide a dor", 80),
+            ("Do teu peito cansado", 80),
+            ("Com alguém que não vai te sarar?", 80),
+            ("", 500),
+            ("Meu amor", 80),
+            ("Eu vivo no aguardo", 80),
+            ("De ver você voltando", 80),
+            ("Cruzando a porta, parararara", 80),
+            ("", 500),
+            ("Ei, diz pra mim o que eu quero escutar", 90),
+            ("Só você sabe adivinhar", 90),
+            ("Meus desejos secretos", 90),
+            ("", 500),
+            ("Ei, faz de conta que não percebi", 90),
+            ("Que você não esteve aqui", 90),
+            ("Com teu jeito singelo", 90),
+            ("", 500),
+            ("Ai, amor", 80),
+            ("Será que tu divide a dor", 80),
+            ("Do teu peito cansado", 80),
+            ("Com alguém que não vai te sarar", 80),
+            ("", 500),
+            ("Meu amor", 80),
+            ("Eu vivo no aguardo", 80),
+            ("De ver você voltando", 80),
+            ("Cruzando a porta", 80),
+            ("", 500),
+            ("Sem hora pra voltar", 75),
+            ("Sem rota pra tua fuga, ai, ai, ai, ai", 75),
+            ("Com tempo pra perder", 75),
+            ("Teu olho degradê pra colorir", 75),
+            ("Pra colorir", 75),
+            ("", 500),
+            ("Sem hora pra voltar", 75),
+            ("Sem rota pra tua fuga, ai, ai, ai, ai", 75),
+            ("Com tempo pra perder", 75),
+            ("Teu olho degradê pra colorir", 75),
+            ("", 500),
+            ("Ih, ih, ih, ih, ai, amor", 80),
+            ("Será que tu divide a dor", 80),
+            ("Do teu peito cansado", 80),
+            ("Com alguém que não vai te sarar?", 80),
+            ("", 500),
+            ("Meu amor", 80),
+            ("Eu vivo no aguardo", 80),
+            ("De ver você voltando", 80),
+            ("Cruzando a porta, parararara", 80),
+            ("", 500),
+            ("Parararara, ah ah", 90),
         ]
 
-        def next_line(index=0):
-            if index >= len(lyrics):
+        def next_line():
+            # Se pausar, para a execução e guarda o ponto atual
+            if not self.playing:
+                self.singing = False
                 return
-            texto, velocidade = lyrics[index]
+                
+            if self.lyric_index >= len(lyrics):
+                self.lyric_index = 0 # Reinicia quando a música acabar
+                self.singing = False
+                return
+
+            texto, velocidade = lyrics[self.lyric_index]
+            self.lyric_index += 1
+
             self.write(
                 texto,
                 self.lyric,
                 velocidade,
                 callback=lambda: self.root.after(
-                    700,
-                    lambda: next_line(index + 1)
+                    700, lambda: next_line()
                 )
             )
+        
         next_line()
+
+# Teste para rodar o app direto se quiser
+if __name__ == "__main__":
+    root = tk.Tk()
+    root.withdraw() # Esconde a janela principal do Tkinter
+    app = Play_AiAiAmor(root)
+    root.mainloop()

@@ -26,7 +26,7 @@ def playlist(nome, img_path, comando):
     label = tk.Label(
         frame,
         image=foto,
-        bg="#121212"
+        bg="#000000"
     )
     label.image = foto
     label.pack(side="left", padx=10)
@@ -83,7 +83,7 @@ def main():
              )
     
     playlist(" Ai, Amor",
-             "gatito.jpg",
+             "Anavitória.jpg",
              lambda: Play_AiAiAmor(janela)
              )
 
