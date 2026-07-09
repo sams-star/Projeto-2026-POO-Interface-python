@@ -106,7 +106,7 @@ class Play_MaisNinguem:
         )
 
         self.write(
-            "Mais ninquem",
+            "Mais Nínquem",
             self.music_title,
             60,
             callback=lambda: self.write(

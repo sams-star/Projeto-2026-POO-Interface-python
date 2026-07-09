@@ -1,7 +1,7 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 
-from sweetChildoMine import Play_SweetChildoMine
+from sweetChildOMine import Play_SweetChildoMine
 from wonderwall import Play_Wonderwall
 from bringMeToLife import Play_BringMeToLife
 from Mais_Ninquem import Play_MaisNinguem
@@ -82,7 +82,7 @@ def main():
              lambda: Play_MaisNinguem(janela)
              )
     
-    playlist(" Ai, Ai Amor",
+    playlist(" Ai, Amor",
              "gatito.jpg",
              lambda: Play_AiAiAmor(janela)
              )

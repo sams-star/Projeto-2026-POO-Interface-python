@@ -104,11 +104,11 @@ class Play_AiAiAmor:
         )
 
         self.write(
-            "Ai, Ai Amor",
+            "Ai,amor",
             self.music_title,
             60,
             callback=lambda: self.write(
-                "SpotTI",
+                "ANAVITORIA",
                 self.artist,
                 90
             )
