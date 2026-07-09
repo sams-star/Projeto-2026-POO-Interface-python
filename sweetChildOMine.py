@@ -82,7 +82,9 @@ class Play_SweetChildoMine:
         tamanho_foto = (220, 220)
         
        
-        self.original_cover = make_image_circular("bandaft.jpg", tamanho_foto)
+        self.original_cover = make_image_circular(
+            "bandaft.jpg",
+              tamanho_foto)
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         

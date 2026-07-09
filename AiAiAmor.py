@@ -1,6 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
 from PIL import Image, ImageTk, ImageDraw
+import pygame
+import os
 
 WIDTH = 360
 HEIGHT = 600
@@ -21,7 +23,11 @@ class Play_AiAiAmor:
             background="white"
         )
 
+        pygame.mixer.init()
+
+        self.atual_song = "Ai Amor.mp3"
         self.playing = False
+        self.paused = False
         self.singing = False 
         self.angle = 0
         self.lyric_index = 0 
@@ -196,16 +202,31 @@ class Play_AiAiAmor:
         self.root.after(95, self.progress_bar)
 
     def toggle_music(self):
+        if not os.path.exists(self.atual_song):
+            self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
+            return
+
         self.playing = not self.playing
 
         if self.playing:
             self.play.config(text="⏸")
+            
+            if not self.paused:
+                pygame.mixer.music.load(self.atual_song)
+                pygame.mixer.music.play()
+            else:
+                pygame.mixer.music.unpause()
+                self.paused = False
+
+
             self.rotate()
             self.progress_bar()
-            if not self.singing:
-                self.sing()
+            
         else:
             self.play.config(text="▶")
+            pygame.mixer.music.pause()
+            self.paused = True
+
 
     def write(self, text, item, speed=80, callback=None):
         def typing(index=0):
