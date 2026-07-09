@@ -1,0 +1,316 @@
+import tkinter as tk
+from tkinter import ttk
+from PIL import Image, ImageTk, ImageDraw
+
+WIDTH = 360
+HEIGHT = 600
+
+class Play_AiAiAmor:
+
+    def __init__(self, master):
+        self.root = tk.Toplevel(master)
+        self.root.title("SpotTI")
+        self.root.geometry(f"{WIDTH}x{HEIGHT}")
+        self.root.resizable(False, False)
+
+        style = ttk.Style(self.root)
+        style.theme_use("clam")
+        style.configure(
+            "Custom.Horizontal.TProgressbar",
+            troughcolor="#05042E",
+            background="white"
+        )
+
+        self.playing = False
+        self.singing = False 
+        self.angle = 0
+        self.lyric_index = 0 
+
+        def make_image_circular(image_path, size):
+            img = Image.open(image_path).convert("RGBA")
+            img = img.resize(size, Image.Resampling.LANCZOS)
+
+            mask = Image.new("L", size, 0)
+            draw = ImageDraw.Draw(mask)
+            draw.ellipse((2, 2, size[0]-2, size[1]-2), fill=255)
+
+            circular_img = Image.new("RGBA", size, (0, 0, 0, 0))
+            circular_img.paste(img, (0, 0), mask)
+
+            return circular_img    
+
+        # gif
+        self.gif = Image.open("ponyo.gif")
+        self.frames = []
+        
+        try:
+            while True:
+                frame = self.gif.copy().convert("RGBA").resize((WIDTH, HEIGHT))
+                self.frames.append(ImageTk.PhotoImage(frame))
+                self.gif.seek(len(self.frames)) 
+        except EOFError:
+            pass 
+
+        self.current_frame = 0
+        self.bg = self.frames[self.current_frame]
+
+        self.canvas = tk.Canvas(self.root, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas.pack(fill="both", expand=True)
+
+        # Coloca o frame
+        self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
+
+        # loop - gif
+        self.animate_bg()
+
+        # filtro preto
+        self.canvas.create_rectangle(
+            0,
+            0,
+            WIDTH,
+            HEIGHT,
+            fill="#000000",
+            stipple="gray50",
+            outline=""
+        )
+
+        # Capa
+        tamanho_foto = (220, 220)
+
+        self.original_cover = make_image_circular(
+            "Anavitória.jpg",
+            tamanho_foto
+        )
+        self.cover = ImageTk.PhotoImage(self.original_cover)
+
+        self.cover_id = self.canvas.create_image(
+            WIDTH // 2,
+            190,
+            image=self.cover
+        )
+
+        # Nome da musiguinha
+        self.music_title = self.canvas.create_text(
+            WIDTH // 2,
+            340,
+            text="",
+            fill="white",
+            font=("Arial", 16, "bold")
+        )
+
+        self.artist = self.canvas.create_text(
+            WIDTH // 2,
+            365,
+            text="",
+            fill="#bbbbbb",
+            font=("Arial", 11)
+        )
+
+        # Barra de progresso
+        style.configure(
+            "Custom.Horizontal.TProgressbar",
+            troughcolor="#05042E",   # fundo
+            background="white"       
+        )
+        self.progress = ttk.Progressbar(
+            self.root,
+            length=270,
+            maximum=100,
+            style="Custom.Horizontal.TProgressbar"
+        )
+
+        self.canvas.create_window(
+            WIDTH // 2,
+            410,
+            window=self.progress
+        )
+
+        # Letras (Criado ANTES do efeito write rodar)
+        self.lyric = self.canvas.create_text(
+            WIDTH // 2,
+            470,
+            text="",
+            fill="white",
+            font=("Arial", 14),
+            width=300,
+            justify="center"
+        )
+
+        # Play
+        self.play = tk.Button(
+            self.root,
+            text="▶",
+            font=("Arial", 22),
+            bg="#120d42",
+            fg="white",
+            command=self.toggle_music
+        )
+
+        self.canvas.create_window(
+            WIDTH // 2,
+            530,
+            window=self.play
+        )
+
+        # EXECUTAR O EFEITO WRITE AQUI NO FINAL DO INIT
+        self.write(
+            "Ai, Amor",
+            self.music_title,
+            60,
+            callback=lambda: self.write(
+                "ANAVITÓRIA",
+                self.artist,
+                90
+            )
+        )
+
+    # A ANIMAÇÃO DO GIF 
+    def animate_bg(self):
+        self.bg = self.frames[self.current_frame]
+        self.canvas.itemconfig(self.bg_image_id, image=self.bg)
+        self.current_frame = (self.current_frame + 1) % len(self.frames)
+        self.root.after(90, self.animate_bg)
+
+    # animaçãozinha DA FOTO
+    def rotate(self):
+        if not self.playing:
+            return
+        self.angle = (self.angle + 3) % 360
+        img = self.original_cover.rotate(-self.angle, resample=Image.BICUBIC)
+        self.cover = ImageTk.PhotoImage(img)
+
+        self.canvas.itemconfig(
+            self.cover_id,
+            image=self.cover
+        )
+        self.root.after(75, self.rotate)
+
+    def progress_bar(self):
+        if not self.playing:
+            return
+        value = self.progress["value"] + 0.1
+
+        if value > 100:
+            value = 0
+        self.progress["value"] = value
+        self.root.after(95, self.progress_bar)
+
+    def toggle_music(self):
+        self.playing = not self.playing
+
+        if self.playing:
+            self.play.config(text="⏸")
+            self.rotate()
+            self.progress_bar()
+            if not self.singing:
+                self.sing()
+        else:
+            self.play.config(text="▶")
+
+    def write(self, text, item, speed=80, callback=None):
+        def typing(index=0):
+            # Se o usuário pausar a música, interrompe o efeito de digitação atual das letras
+            if not self.playing and item == self.lyric:
+                return
+            if index <= len(text):
+                self.canvas.itemconfig(
+                    item,
+                    text=text[:index]
+                )
+                self.root.after(
+                    speed,
+                    lambda: typing(index + 1)
+                )
+            elif callback:
+                callback()
+        typing()
+
+    def sing(self):
+        self.singing = True
+        lyrics = [
+            ("", 20000),
+            ("Ei, fiz questão da promessa lembrar", 90),
+            ("Tu jurou minha mão não soltar", 70),
+            ("E se foi junto dela", 80),
+            ("", 300),
+            ("Ei, cê não sabe a falta que faz", 70),
+            ("Será que teus dias tão iguais?", 50),
+            ("Eu me pego pensando", 60),
+            ("", 100),
+            ("Ai, amor", 80),
+            ("Será que tu divide a dor", 100),
+            ("Do teu peito cansado", 90),
+            ("Com alguém que não vai te sarar?", 100),
+            ("", 3500),
+            ("Meu amor", 100),
+            ("Eu vivo no aguardo", 100),
+            ("De ver você voltando", 100),
+            ("Cruzando a porta, parararara", 90),
+            ("", 10000),
+            ("Ei, diz pra mim o que eu quero escutar", 90),
+            ("Só você sabe adivinhar", 90),
+            ("Meus desejos secretos", 90),
+            ("", 500),
+            ("Ei, faz de conta que não percebi", 90),
+            ("Que você não esteve aqui", 90),
+            ("Com teu jeito singelo", 90),
+            ("", 500),
+            ("Ai, amor", 80),
+            ("Será que tu divide a dor", 80),
+            ("Do teu peito cansado", 80),
+            ("Com alguém que não vai te sarar", 80),
+            ("", 500),
+            ("Meu amor", 80),
+            ("Eu vivo no aguardo", 80),
+            ("De ver você voltando", 80),
+            ("Cruzando a porta", 80),
+            ("", 500),
+            ("Sem hora pra voltar", 75),
+            ("Sem rota pra tua fuga, ai, ai, ai, ai", 75),
+            ("Com tempo pra perder", 75),
+            ("Teu olho degradê pra colorir", 75),
+            ("Pra colorir", 75),
+            ("", 500),
+            ("Sem hora pra voltar", 75),
+            ("Sem rota pra tua fuga, ai, ai, ai, ai", 75),
+            ("Com tempo pra perder", 75),
+            ("Teu olho degradê pra colorir", 75),
+            ("", 500),
+            ("Ih, ih, ih, ih, ai, amor", 80),
+            ("Será que tu divide a dor", 80),
+            ("Do teu peito cansado", 80),
+            ("Com alguém que não vai te sarar?", 80),
+            ("", 500),
+            ("Meu amor", 80),
+            ("Eu vivo no aguardo", 80),
+            ("De ver você voltando", 80),
+            ("Cruzando a porta, parararara", 80),
+            ("", 500),
+            ("Parararara, ah ah", 90),
+        ]
+
+        def next_line():
+            # Se pausar, para a execução e guarda o ponto atual
+            if not self.playing:
+                self.singing = False
+                return
+                
+            if self.lyric_index >= len(lyrics):
+                self.lyric_index = 0 # Reinicia quando a música acabar
+                self.singing = False
+                return
+
+            texto, velocidade = lyrics[self.lyric_index]
+            self.lyric_index += 1
+
+            self.write(
+                texto,
+                self.lyric,
+                velocidade,
+                callback=lambda: self.root.after(
+                    700, lambda: next_line()
+                )
+            )
+        
+        next_line()
+
