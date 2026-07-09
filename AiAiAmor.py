@@ -169,7 +169,10 @@ class Play_AiAiAmor:
             )
         )
 
+  
+
  
+
     def animate_bg(self):
         self.bg = self.frames[self.current_frame]
         self.canvas.itemconfig(self.bg_image_id, image=self.bg)
@@ -198,7 +201,7 @@ class Play_AiAiAmor:
         if value > 100:
             value = 0
         self.progress["value"] = value
-        self.root.after(95, self.progress_bar)
+        self.root.after(300, self.progress_bar)
 
     def toggle_music(self):
         if not os.path.exists(self.atual_song):
@@ -220,6 +223,8 @@ class Play_AiAiAmor:
 
             self.rotate()
             self.progress_bar()
+            if not self.singing:  
+                self.sing()
             
         else:
             self.play.config(text="▶")
@@ -231,6 +236,7 @@ class Play_AiAiAmor:
         def typing(index=0):
      
             if not self.playing and item == self.lyric:
+                self.singing = False
                 return
             if index <= len(text):
                 self.canvas.itemconfig(
@@ -258,23 +264,23 @@ class Play_AiAiAmor:
             ("Eu me pego pensando", 60),
             ("", 100),
             ("Ai, amor", 80),
-            ("Será que tu divide a dor", 100),
-            ("Do teu peito cansado", 90),
-            ("Com alguém que não vai te sarar?", 100),
+            ("Será que tu divide a dor", 150),
+            ("Do teu peito cansado", 100),
+            ("Com alguém que não vai te sarar?", 150),
             ("", 3500),
-            ("Meu amor", 100),
-            ("Eu vivo no aguardo", 100),
-            ("De ver você voltando", 100),
-            ("Cruzando a porta, parararara", 90),
-            ("", 10000),
-            ("Ei, diz pra mim o que eu quero escutar", 90),
-            ("Só você sabe adivinhar", 90),
-            ("Meus desejos secretos", 90),
-            ("", 500),
-            ("Ei, faz de conta que não percebi", 90),
-            ("Que você não esteve aqui", 90),
-            ("Com teu jeito singelo", 90),
-            ("", 500),
+            ("Meu amor", 150),
+            ("Eu vivo no aguardo", 150),
+            ("De ver você voltando", 150),
+            ("Cruzando a porta, parararara", 150),
+            ("", 9000),
+            ("Ei, diz pra mim o que eu quero escutar", 100),
+            ("Só você sabe adivinhar", 70),
+            ("Meus desejos secretos", 70),
+            ("", 400),
+            ("Ei, faz de conta que não percebi", 80),
+            ("Que você não esteve aqui", 70),
+            ("Com teu jeito singelo", 70),
+            ("", 400),
             ("Ai, amor", 80),
             ("Será que tu divide a dor", 80),
             ("Do teu peito cansado", 80),
