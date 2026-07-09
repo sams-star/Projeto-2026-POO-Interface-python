@@ -23,14 +23,15 @@ class Play_AiAiAmor:
             background="white"
         )
 
-        pygame.mixer.init()
-
-        self.atual_song = "Ai Amor2.mp3"
+        
         self.playing = False
         self.paused = False
         self.singing = False 
         self.angle = 0
         self.lyric_index = 0 
+
+        pygame.mixer.init()
+        self.atual_song = "Ai Amor2.mp3"
 
         def make_image_circular(image_path, size):
             img = Image.open(image_path).convert("RGBA")
