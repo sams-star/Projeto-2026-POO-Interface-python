@@ -76,11 +76,11 @@ btn_entrar = tk.Button(
     root,
     text="Conectar",
     command=realizar_login,
-    bg="#1db954", 
+    bg="#740707", 
     fg="white",
     font=("Arial", 12, "bold"),
     bd=0,
-    activebackground="#1aa34a",
+    activebackground="#ce0606",
     activeforeground="white"
 )
 btn_entrar.pack(fill="x", padx=45, pady=40, ipady=10)
