@@ -13,9 +13,10 @@ class SalvarMusicas:
         self.nome_arquivo_json = "usuarios.json"
         self.root = tk.Toplevel(master)
         self.root.title(f"SpotTI - Músicas de {self.usuario_logado}")
-        self.root.geometry("360x600")
+        self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.configure(bg="#121212")
         self.root.resizable(False, False)
+        self.carregar_historico_json()
 
 
         pygame.mixer.init()
@@ -25,10 +26,8 @@ class SalvarMusicas:
         self.paused = False
         self.directory = ""
         
-        # Garante o foco nesta nova janela
         self.root.grab_set()
 
-        # Componentes Visuais
         tk.Label(
             self.root, 
             text=f"Músicas de {self.usuario_logado}", 
@@ -37,12 +36,12 @@ class SalvarMusicas:
             font=("Arial", 16, "bold")
         ).pack(pady=15)
 
-        # Listbox para exibir as músicas
+      
         self.songlist = tk.Listbox(
             self.root, 
             bg="#1e1e1e", 
             fg="white", 
-            selectbackground="#1db954", 
+            selectbackground="#541B1B", 
             selectforeground="white", 
             bd=0, 
             highlightthickness=0, 
@@ -54,15 +53,15 @@ class SalvarMusicas:
             fill="both",
             expand=True)
 
-        # Botão para carregar pastas
+      
         self.btn_carregar = tk.Button(
             self.root, 
             text="Selecionar Pasta", 
             command=self.carregar_musica,
-            bg="#1db954", 
+            bg="#740707", 
             fg="white",  
             bd=0,
-            activebackground="#1aa34a",
+            activebackground="#4F0606",
             activeforeground="white"
         )
         self.btn_carregar.pack(fill="x", padx=20, pady=15, ipady=8)
@@ -76,17 +75,17 @@ class SalvarMusicas:
         tk.Button(frame,text="⏸",command=self.pause,width=3).grid(row=0,column=2,padx=5)
         tk.Button(frame,text="⏭",command=self.next,width=3).grid(row=0,column=3,padx=5)
 
-        # Carrega automaticamente as músicas já salvas no JSON ao abrir
-        self.carregar_historico_json()
+    
+       
 
     def carregar_historico_json(self):
-        """Busca no arquivo JSON se o usuário já tem músicas salvas anteriormente."""
         if os.path.exists(self.nome_arquivo_json):
             try:
                 with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
                     dados = json.load(arquivo)
                     if self.usuario_logado in dados:
                         self.songs = dados[self.usuario_logado].get("musicas", [])
+                        self.directory = dados[self.usuario_logado].get("diretorio", "")
                         for song in self.songs:
                             self.songlist.insert("end", song)
                         if self.songs:
@@ -96,26 +95,25 @@ class SalvarMusicas:
                 print("Erro ao ler histórico do JSON:", e)
 
     def carregar_musica(self):
-        """Abre o seletor de diretório e atualiza a lista de músicas do usuário."""
         diretorio = filedialog.askdirectory(parent=self.root)
 
         if not diretorio: 
             return
+        
+        self.directory = diretorio
+        diretorio = filedialog.askdirectory(parent=self.root)
 
         self.songs.clear()
         self.songlist.delete(0, tk.END)
 
-        # Escaneia os arquivos mp3 da pasta escolhida
         for item in os.listdir(diretorio):
             name, ext = os.path.splitext(item) 
             if ext.lower() == '.mp3':
                 self.songs.append(item)
 
-        # Popula a listbox visual
         for song in self.songs:
             self.songlist.insert("end", song)
 
-        # Grava a nova lista dentro do objeto do usuário no arquivo JSON
         if os.path.exists(self.nome_arquivo_json):
             try:
                 with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
@@ -123,6 +121,7 @@ class SalvarMusicas:
                 
                 if self.usuario_logado in dados_usuarios:
                     dados_usuarios[self.usuario_logado]["musicas"] = self.songs
+                    dados_usuarios[self.usuario_logado]["diretorio"] = self.directory
                     
                     with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
                         json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
@@ -133,12 +132,12 @@ class SalvarMusicas:
             self.songlist.select_set(0)
             self.atual_song = self.songs[0]
 
+        self.salvar_json()
+
 
     def play(self):
-
         if not self.songs:
             return
-
         try:
             indice = self.songlist.curselection()[0]
             self.atual_song = self.songs[indice]
@@ -151,26 +150,22 @@ class SalvarMusicas:
         )
 
         if not self.paused:
-
             pygame.mixer.music.load(caminho)
             pygame.mixer.music.play()
 
         else:
-
             pygame.mixer.music.unpause()
             self.paused = False
 
 
 
     def pause(self):
-
         pygame.mixer.music.pause()
         self.paused = True
 
 
 
     def next(self):
-
         if not self.songs:
             return
 
@@ -188,7 +183,6 @@ class SalvarMusicas:
 
 
     def prev(self):
-
         if not self.songs:
             return
 

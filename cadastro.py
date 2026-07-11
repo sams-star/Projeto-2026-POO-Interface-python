@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageTk
 WIDTH = 360
 HEIGHT = 600
 ARQUIVO_USUARIOS = "usuarios.json"
-IMAGEM_LOGO = "maisninquem.jpg"
+IMAGEM_LOGO = "logo.jpeg"
 
 # --- PALETA DE CORES ---
 COR_BG_PRINCIPAL = "#121212"
@@ -64,7 +64,7 @@ class InterfaceLogin:
         self.root.title("SpotTI - Login")
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.resizable(False, False)
-        self.root.configure(bg=COR_BG_PRINCIPAL)
+        self.root.configure(bg=COR_BG_PRINCIPAL) 
 
     def carregar_imagem_circular(self, caminho_imagem, tamanho):
         try:
