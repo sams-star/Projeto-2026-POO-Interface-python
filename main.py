@@ -100,6 +100,7 @@ def main():
         lambda: Play_BringMeToLife(janela)
     )
 
+
     playlist(
         "Salve suas musicas",
         "musica.jpg",
