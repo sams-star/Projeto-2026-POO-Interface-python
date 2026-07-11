@@ -205,3 +205,6 @@ class Play_Wonderwall:
             value = 0
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
+
+
+    
