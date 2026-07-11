@@ -16,6 +16,7 @@ class SalvarMusicas:
         self.root.geometry(f"{WIDTH}x{HEIGHT}")
         self.root.configure(bg="#121212")
         self.root.resizable(False, False)
+        self.carregar_historico_json()
 
 
         pygame.mixer.init()
@@ -84,6 +85,7 @@ class SalvarMusicas:
                     dados = json.load(arquivo)
                     if self.usuario_logado in dados:
                         self.songs = dados[self.usuario_logado].get("musicas", [])
+                        self.directory = dados[self.usuario_logado].get("diretorio", "")
                         for song in self.songs:
                             self.songlist.insert("end", song)
                         if self.songs:
@@ -97,6 +99,9 @@ class SalvarMusicas:
 
         if not diretorio: 
             return
+        
+        self.directory = diretorio
+        diretorio = filedialog.askdirectory(parent=self.root)
 
         self.songs.clear()
         self.songlist.delete(0, tk.END)
@@ -116,6 +121,7 @@ class SalvarMusicas:
                 
                 if self.usuario_logado in dados_usuarios:
                     dados_usuarios[self.usuario_logado]["musicas"] = self.songs
+                    dados_usuarios[self.usuario_logado]["diretorio"] = self.directory
                     
                     with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
                         json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
