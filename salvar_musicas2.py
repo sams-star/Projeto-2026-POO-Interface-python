@@ -8,191 +8,197 @@ WIDTH = 360
 HEIGHT = 600
 
 class SalvarMusicas:
-    def __init__(self, master, usuario_logado):
-        self.usuario_logado = usuario_logado
-        self.nome_arquivo_json = "usuarios.json"
-        self.root = tk.Toplevel(master)
-        self.root.title(f"SpotTI - Músicas de {self.usuario_logado}")
-        self.root.geometry(f"{WIDTH}x{HEIGHT}")
-        self.root.configure(bg="#121212")
-        self.root.resizable(False, False)
-        self.carregar_historico_json()
-
-
-        pygame.mixer.init()
+        def __init__(self, master, usuario_logado):
+            self.usuario_logado = usuario_logado
+            self.nome_arquivo_json = "usuarios.json"
+            self.root = tk.Toplevel(master)
+            self.root.title(f"SpotTI - Músicas de {self.usuario_logado}")
+            self.root.geometry(f"{WIDTH}x{HEIGHT}")
+            self.root.configure(bg="#121212")
+            self.root.resizable(False, False)
             
-        self.songs = []
-        self.atual_song = ""
-        self.paused = False
-        self.directory = ""
-        
-        self.root.grab_set()
-
-        tk.Label(
-            self.root, 
-            text=f"Músicas de {self.usuario_logado}", 
-            bg="#121212", 
-            fg="white", 
-            font=("Arial", 16, "bold")
-        ).pack(pady=15)
-
-      
-        self.songlist = tk.Listbox(
-            self.root, 
-            bg="#1e1e1e", 
-            fg="white", 
-            selectbackground="#541B1B", 
-            selectforeground="white", 
-            bd=0, 
-            highlightthickness=0, 
-            font=("Arial", 11)
-        )
-        self.songlist.pack(
-            pady=10, 
-            padx=20,
-            fill="both",
-            expand=True)
-
-      
-        self.btn_carregar = tk.Button(
-            self.root, 
-            text="Selecionar Pasta", 
-            command=self.carregar_musica,
-            bg="#740707", 
-            fg="white",  
-            bd=0,
-            activebackground="#4F0606",
-            activeforeground="white"
-        )
-        self.btn_carregar.pack(fill="x", padx=20, pady=15, ipady=8)
 
 
-        frame = tk.Frame(self.root,bg="#121212")
-        frame.pack(pady=15)
-
-        tk.Button(frame,text="⏮",command=self.prev,width=3).grid(row=0,column=0,padx=5)
-        tk.Button(frame,text="▶",command=self.play,width=3).grid(row=0,column=1,padx=5)
-        tk.Button(frame,text="⏸",command=self.pause,width=3).grid(row=0,column=2,padx=5)
-        tk.Button(frame,text="⏭",command=self.next,width=3).grid(row=0,column=3,padx=5)
-
-    
-       
-
-    def carregar_historico_json(self):
-        if os.path.exists(self.nome_arquivo_json):
-            try:
-                with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
-                    dados = json.load(arquivo)
-                    if self.usuario_logado in dados:
-                        self.songs = dados[self.usuario_logado].get("musicas", [])
-                        self.directory = dados[self.usuario_logado].get("diretorio", "")
-                        for song in self.songs:
-                            self.songlist.insert("end", song)
-                        if self.songs:
-                            self.songlist.select_set(0)
-                            self.atual_song = self.songs[0]
-            except Exception as e:
-                print("Erro ao ler histórico do JSON:", e)
-
-    def carregar_musica(self):
-        diretorio = filedialog.askdirectory(parent=self.root)
-
-        if not diretorio: 
-            return
-        
-        self.directory = diretorio
-        diretorio = filedialog.askdirectory(parent=self.root)
-
-        self.songs.clear()
-        self.songlist.delete(0, tk.END)
-
-        for item in os.listdir(diretorio):
-            name, ext = os.path.splitext(item) 
-            if ext.lower() == '.mp3':
-                self.songs.append(item)
-
-        for song in self.songs:
-            self.songlist.insert("end", song)
-
-        if os.path.exists(self.nome_arquivo_json):
-            try:
-                with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
-                    dados_usuarios = json.load(arquivo)
+            pygame.mixer.init()
                 
-                if self.usuario_logado in dados_usuarios:
-                    dados_usuarios[self.usuario_logado]["musicas"] = self.songs
-                    dados_usuarios[self.usuario_logado]["diretorio"] = self.directory
-                    
-                    with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
-                        json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
-            except Exception as e:
-                messagebox.showerror("Erro", f"Não foi possível salvar no JSON: {e}", parent=self.root)
-
-        if self.songs:
-            self.songlist.select_set(0)
-            self.atual_song = self.songs[0]
-
-        self.salvar_json()
-
-
-    def play(self):
-        if not self.songs:
-            return
-        try:
-            indice = self.songlist.curselection()[0]
-            self.atual_song = self.songs[indice]
-        except:
-            pass
-
-        caminho = os.path.join(
-            self.directory,
-            self.atual_song
-        )
-
-        if not self.paused:
-            pygame.mixer.music.load(caminho)
-            pygame.mixer.music.play()
-
-        else:
-            pygame.mixer.music.unpause()
+            self.songs = []
+            self.atual_song = ""
             self.paused = False
+            self.directory = ""
+            
+            self.root.grab_set()
+
+            tk.Label(
+                self.root, 
+                text=f"Músicas de {self.usuario_logado}", 
+                bg="#121212", 
+                fg="white", 
+                font=("Arial", 16, "bold")
+            ).pack(pady=15)
+
+        
+            self.songlist = tk.Listbox(
+                self.root, 
+                bg="#1e1e1e", 
+                fg="white", 
+                selectbackground="#541B1B", 
+                selectforeground="white", 
+                bd=0, 
+                highlightthickness=0, 
+                font=("Arial", 11)
+            )
+            self.songlist.pack(
+                pady=10, 
+                padx=20,
+                fill="both",
+                expand=True)
+
+        
+            self.btn_carregar = tk.Button(
+                self.root, 
+                text="Selecionar Pasta", 
+                command=self.carregar_musica,
+                bg="#740707", 
+                fg="white",  
+                bd=0,
+                activebackground="#4F0606",
+                activeforeground="white"
+            )
+            self.btn_carregar.pack(fill="x", padx=20, pady=15, ipady=8)
+
+
+            frame = tk.Frame(self.root,bg="#121212")
+            frame.pack(pady=15)
+
+            tk.Button(frame,text="⏮",command=self.prev,width=3).grid(row=0,column=0,padx=5)
+            tk.Button(frame,text="▶",command=self.play,width=3).grid(row=0,column=1,padx=5)
+            tk.Button(frame,text="⏸",command=self.pause,width=3).grid(row=0,column=2,padx=5)
+            tk.Button(frame,text="⏭",command=self.next,width=3).grid(row=0,column=3,padx=5)
+
+            self.carregar_historico_json()
+
+        
+        
+
+        def carregar_historico_json(self):
+            if os.path.exists(self.nome_arquivo_json):
+                try:
+                    with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
+                        dados = json.load(arquivo)
+                        if self.usuario_logado in dados:
+                            self.songs = dados[self.usuario_logado].get("musicas", [])
+                            self.directory = dados[self.usuario_logado].get("diretorio", "")
+                            for song in self.songs:
+                                self.songlist.insert("end", song)
+                            if self.songs:
+                                self.songlist.select_set(0)
+                                self.atual_song = self.songs[0]
+                except Exception as e:
+                    print("Erro ao ler histórico do JSON:", e)
+
+        def carregar_musica(self):
+            diretorio = filedialog.askdirectory(parent=self.root)
+
+            if not diretorio: 
+                return
+            
+            self.directory = diretorio
+            
+
+            self.songs.clear()
+            self.songlist.delete(0, tk.END)
+
+            for item in os.listdir(diretorio):
+                name, ext = os.path.splitext(item) 
+                if ext.lower() == '.mp3':
+                    self.songs.append(item)
+
+            for song in self.songs:
+                self.songlist.insert("end", song)
+
+            if os.path.exists(self.nome_arquivo_json):
+                try:
+                    with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
+                        dados_usuarios = json.load(arquivo)
+                    
+                    if self.usuario_logado in dados_usuarios:
+                        dados_usuarios[self.usuario_logado]["musicas"] = self.songs
+                        dados_usuarios[self.usuario_logado]["diretorio"] = self.directory
+                        
+                        with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
+                            json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
+                except Exception as e:
+                    messagebox.showerror("Erro", f"Não foi possível salvar no JSON: {e}", parent=self.root)
+
+            if self.songs:
+                self.songlist.select_set(0)
+                self.atual_song = self.songs[0]
+
+            self.salvar_json()
+
+
+        def play(self):
+            if not self.songs:
+                print("Nenhuma música carregada.")
+                return
+
+            try:
+                indice = self.songlist.curselection()[0]
+                self.atual_song = self.songs[indice]
+            except:
+                print("Nenhuma música selecionada.")
+                return
+
+            caminho = os.path.join(self.directory, self.atual_song)
+
+            print("----------------------------")
+            print("Diretório:", self.directory)
+            print("Música:", self.atual_song)
+            print("Caminho:", caminho)
+            print("Arquivo existe?", os.path.exists(caminho))
+
+            try:
+                pygame.mixer.music.load(caminho)
+                pygame.mixer.music.play()
+                print("Música iniciada.")
+            except Exception as e:
+                print("ERRO:", e)
+
+
+        def pause(self):
+            pygame.mixer.music.pause()
+            self.paused = True
 
 
 
-    def pause(self):
-        pygame.mixer.music.pause()
-        self.paused = True
+        def next(self):
+            if not self.songs:
+                return
+
+            indice = (self.songs.index(self.atual_song)+1)%len(self.songs)
+
+            self.songlist.select_clear(0,tk.END)
+            self.songlist.select_set(indice)
+
+            self.atual_song=self.songs[indice]
+
+            self.paused=False
+
+            self.play()
 
 
 
-    def next(self):
-        if not self.songs:
-            return
+        def prev(self):
+            if not self.songs:
+                return
 
-        indice = (self.songs.index(self.atual_song)+1)%len(self.songs)
+            indice=(self.songs.index(self.atual_song)-1)%len(self.songs)
 
-        self.songlist.select_clear(0,tk.END)
-        self.songlist.select_set(indice)
+            self.songlist.select_clear(0,tk.END)
+            self.songlist.select_set(indice)
 
-        self.atual_song=self.songs[indice]
+            self.atual_song=self.songs[indice]
 
-        self.paused=False
+            self.paused=False
 
-        self.play()
-
-
-
-    def prev(self):
-        if not self.songs:
-            return
-
-        indice=(self.songs.index(self.atual_song)-1)%len(self.songs)
-
-        self.songlist.select_clear(0,tk.END)
-        self.songlist.select_set(indice)
-
-        self.atual_song=self.songs[indice]
-
-        self.paused=False
-
-        self.play()
+            self.play()
