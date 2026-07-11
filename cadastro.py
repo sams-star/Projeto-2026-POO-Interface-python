@@ -25,16 +25,14 @@ def realizar_login():
         except json.JSONDecodeError:
             dados_usuarios = {}
 
-    # Lógica de decisão adaptada para a nova estrutura
+
     if usuario in dados_usuarios:
-        # A senha agora fica dentro do campo ["senha"]
         if dados_usuarios[usuario]["senha"] == senha:
             messagebox.showinfo("Sucesso", f"Bem-vindo de volta, {usuario}!")
         else:
             messagebox.showerror("Erro", "Senha incorreta!")
             return
     else:
-        # Cria o novo usuário com a estrutura: senha + lista de músicas vazia
         dados_usuarios[usuario] = {
             "senha": senha,
             "musicas": []
@@ -44,7 +42,7 @@ def realizar_login():
         
         messagebox.showinfo("Sucesso", f"Conta criada!\nBem-vindo, {usuario}!")
 
-    # IMPORTANTE: Passa o nome do usuário logado como argumento para a biblioteca principal
+   
     subprocess.Popen(["python", "main.py", usuario])
     root.destroy()
 
