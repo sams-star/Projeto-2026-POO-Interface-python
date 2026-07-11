@@ -1,0 +1,20 @@
+{
+    "eu": {
+        "senha": "567",
+        "musicas": []
+    },
+    "samiraa": {
+        "senha": "123",
+        "musicas": [
+            "Arctic_Monkeys_-_Why_d_You_Only_Call_Me_When_You_re_High_(mp3.pm).mp3",
+            "guilhermeterra-sweet-child-o-mine-78fdced7.mp3"
+        ]
+    },
+    "lena": {
+        "senha": "123",
+        "musicas": [
+            "Arctic_Monkeys_-_Why_d_You_Only_Call_Me_When_You_re_High_(mp3.pm).mp3",
+            "guilhermeterra-sweet-child-o-mine-78fdced7.mp3"
+        ]
+    }
+}

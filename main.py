@@ -1,5 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
+import sys
 
 from sweetChildOMine import Play_SweetChildoMine
 from wonderwall import Play_Wonderwall
@@ -13,7 +14,7 @@ HEIGHT = 600
 
 janela = None
 
-
+USUARIO_LOGADO = sys.argv[1] if len(sys.argv) > 1 else sys.exit()
 
 def playlist(nome, img_path, comando):
 
@@ -102,8 +103,10 @@ def main():
     playlist(
         "Salve suas musicas",
         "musica.jpg",
-        lambda: SalvarMusicas(janela)
+        lambda: SalvarMusicas(janela, USUARIO_LOGADO)
     )
+
+    
     
 
     janela.mainloop()

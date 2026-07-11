@@ -1,13 +1,8 @@
 import tkinter as tk
 from tkinter import ttk
-<<<<<<< Updated upstream
 from PIL import Image, ImageTk, ImageDraw
 import pygame
 import os
-=======
-from PIL import Image, ImageTk, ImageFilter
-
->>>>>>> Stashed changes
 
 WIDTH = 360
 HEIGHT = 600
@@ -159,7 +154,6 @@ class MusicPlayer:
             command=self.toggle_music
         )
 
-<<<<<<< Updated upstream
         def toggle_music(self):
             if not os.path.exists(self.atual_song):
                 self.canvas.itemconfig(self.music_title, text="Arquivo não encontrado!")
@@ -186,17 +180,11 @@ class MusicPlayer:
             pygame.mixer.music.pause()
             self.paused = True
 
-=======
->>>>>>> Stashed changes
         self.canvas.create_window(
             WIDTH // 2,
             530,
             window=self.play
         )
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 
     
     def animate_bg(self):

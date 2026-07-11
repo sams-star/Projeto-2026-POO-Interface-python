@@ -2,152 +2,177 @@ import tkinter as tk
 from tkinter import filedialog
 import pygame
 import os
+import json
 
 WIDTH = 360
 HEIGHT = 600
 
 
-janela = tk.Tk()
-janela.title('SpotTI - Minhas Músicas')
-janela.geometry(f"{WIDTH}x{HEIGHT}")
-janela.configure(bg="#121212")
-janela.resizable(False, False)
+class SalvarMusicass:
 
-pygame.mixer.init()
+    def __init__(self, master):
 
-songs = []
-atual_song = ""
-paused = False
+        self.root = tk.Toplevel(master)
+        self.root.title("SpotTI - Minhas Músicas")
+        self.root.geometry(f"{WIDTH}x{HEIGHT}")
+        self.root.configure(bg="#121212")
+        self.root.resizable(False, False)
 
-tk.Label(
-    janela, 
-    text="Suas Músicas", 
-    bg="#121212", 
-    fg="white", 
-    font=("Arial", 18, "bold")
-).pack(pady=15)
+        pygame.mixer.init()
 
+        self.songs = []
+        self.atual_song = ""
+        self.paused = False
+        self.directory = ""
 
-songlist = tk.Listbox(
-    janela, 
-    bg="#1e1e1e", 
-    fg="white", 
-    selectbackground="#1db954", 
-    selectforeground="white",
-    bd=0,
-    highlightthickness=0,
-    font=("Arial", 11),
-    width=35,
-    height=15
-)
-songlist.pack(pady=10, padx=20, fill="both", expand=True)
+        tk.Label(
+            self.root,
+            text="Suas Músicas",
+            bg="#121212",
+            fg="white",
+            font=("Arial",18,"bold")
+        ).pack(pady=15)
 
+        self.songlist = tk.Listbox(
+            self.root,
+            bg="#1e1e1e",
+            fg="white",
+            selectbackground="#1db954",
+            selectforeground="white",
+            bd=0,
+            highlightthickness=0,
+            font=("Arial",11)
+        )
 
-def carregar_musica():
-    global atual_song
-    janela.directory = filedialog.askdirectory(parent=janela)
+        self.songlist.pack(
+            padx=20,
+            pady=10,
+            fill="both",
+            expand=True
+        )
 
-    if not janela.directory: 
-        return
+        tk.Button(
+            self.root,
+            text="📁 Selecionar Pasta",
+            command=self.carregar_musicas,
+            bg="#1db954",
+            fg="white",
+            bd=0
+        ).pack(pady=10)
 
-    songs.clear()
-    songlist.delete(0, tk.END)
+        frame = tk.Frame(self.root,bg="#121212")
+        frame.pack(pady=15)
 
-    for song in os.listdir(janela.directory):
-        name, ext = os.path.splitext(song) 
-        if ext.lower() == '.mp3':
-            songs.append(song)
-
-    for song in songs:
-        songlist.insert("end", song)
-
-    if songs:
-        songlist.select_set(0)
-        atual_song = songs[0]
-
-btn_carregar = tk.Button(
-    janela,
-    text="📁 Selecionar Pasta de Músicas",
-    command=carregar_musica,
-    bg="#1db954",
-    fg="white",
-    font=("Arial", 11, "bold"),
-    bd=0,
-    padx=15,
-    pady=8,
-    activebackground="#1aa34a",
-    activeforeground="white"
-)
-btn_carregar.pack(pady=10)
+        tk.Button(frame,text="⏮",command=self.prev,width=3).grid(row=0,column=0,padx=5)
+        tk.Button(frame,text="▶",command=self.play,width=3).grid(row=0,column=1,padx=5)
+        tk.Button(frame,text="⏸",command=self.pause,width=3).grid(row=0,column=2,padx=5)
+        tk.Button(frame,text="⏭",command=self.next,width=3).grid(row=0,column=3,padx=5)
 
 
-control_frame = tk.Frame(janela, bg="#121212")
-control_frame.pack(pady=15)
+    def carregar_musicas(self):
 
-def play_music():
-    global atual_song, paused
-    if not songs:
-        return
-        
-  
-    try:
-        selecionada = songlist.curselection()[0]
-        atual_song = songs[selecionada]
-    except IndexError:
-        pass
+        pasta = filedialog.askdirectory(parent=self.root)
 
-    if not paused:
-        pygame.mixer.music.load(os.path.join(janela.directory, atual_song))
-        pygame.mixer.music.play()
-    else:
-        pygame.mixer.music.unpause()
-        paused = False
+        if not pasta:
+            return
 
-def pause_music():
-    global paused 
-    pygame.mixer.music.pause()
-    paused = True
+        self.directory = pasta
 
-def next_music():
-    global atual_song, paused
-    try:
-        index_atual = songs.index(atual_song)
-        proximo_index = (index_atual + 1) % len(songs)
-        songlist.select_clear(0, tk.END)
-        songlist.select_set(proximo_index)
-        atual_song = songs[proximo_index]
-        paused = False
-        play_music()
-    except:
-        pass
+        self.songs.clear()
+        self.songlist.delete(0,tk.END)
 
-def prev_music():
-    global atual_song, paused
-    try:
-        index_atual = songs.index(atual_song)
-        anterior_index = (index_atual - 1) % len(songs)
-        songlist.select_clear(0, tk.END)
-        songlist.select_set(anterior_index)
-        atual_song = songs[anterior_index]
-        paused = False
-        play_music()
-    except:
-        pass
+        for arquivo in os.listdir(pasta):
+
+            if arquivo.lower().endswith(".mp3"):
+
+                self.songs.append(arquivo)
+                self.songlist.insert(tk.END,arquivo)
+
+        if self.songs:
+            self.songlist.select_set(0)
+            self.atual_song = self.songs[0]
+
+        self.salvar_json()
 
 
-estilo_botoes = {
-    "bg": "#121212", "fg": "white", "bd": 0, "font": ("Arial", 18),
-    "activebackground": "#121212", "activeforeground": "#1db954"
-}
+    def salvar_json(self):
 
-prev_btn = tk.Button(control_frame, text="⏮", command=prev_music, **estilo_botoes)
-play_btn = tk.Button(control_frame, text="▶", command=play_music, **estilo_botoes)
-pause_btn = tk.Button(control_frame, text="⏸", command=pause_music, **estilo_botoes)
-next_btn = tk.Button(control_frame, text="⏭", command=next_music, **estilo_botoes)
+        dados = {
+            "musicas": [
+                os.path.join(self.directory, musica)
+                for musica in self.songs
+            ]
+        }
 
-prev_btn.grid(row=0, column=0, padx=15)
-play_btn.grid(row=0, column=1, padx=15)
-pause_btn.grid(row=0, column=2, padx=15)
-next_btn.grid(row=0, column=3, padx=15)
+        with open("musicas.json", "w", encoding="utf-8") as arquivo:
+            json.dump(dados, arquivo, indent=4, ensure_ascii=False)
 
-janela.mainloop()
+
+    def play(self):
+
+        if not self.songs:
+            return
+
+        try:
+            indice = self.songlist.curselection()[0]
+            self.atual_song = self.songs[indice]
+        except:
+            pass
+
+        caminho = os.path.join(
+            self.directory,
+            self.atual_song
+        )
+
+        if not self.paused:
+
+            pygame.mixer.music.load(caminho)
+            pygame.mixer.music.play()
+
+        else:
+
+            pygame.mixer.music.unpause()
+            self.paused = False
+
+
+
+    def pause(self):
+
+        pygame.mixer.music.pause()
+        self.paused = True
+
+
+
+    def next(self):
+
+        if not self.songs:
+            return
+
+        indice = (self.songs.index(self.atual_song)+1)%len(self.songs)
+
+        self.songlist.select_clear(0,tk.END)
+        self.songlist.select_set(indice)
+
+        self.atual_song=self.songs[indice]
+
+        self.paused=False
+
+        self.play()
+
+
+
+    def prev(self):
+
+        if not self.songs:
+            return
+
+        indice=(self.songs.index(self.atual_song)-1)%len(self.songs)
+
+        self.songlist.select_clear(0,tk.END)
+        self.songlist.select_set(indice)
+
+        self.atual_song=self.songs[indice]
+
+        self.paused=False
+
+        self.play()

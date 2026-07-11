@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
+
 from PIL import Image, ImageTk, ImageFilter
 
 WIDTH = 360
@@ -16,43 +17,32 @@ class MusicPlayer:
         self.playing = False
         self.angle = 0
 
-        #gif
-        self.gif = Image.open("slah.gif")
-        self.frames = []
-        
-        try:
-            while True:
-                frame = self.gif.copy().convert("RGBA").resize((WIDTH, HEIGHT))
-                self.frames.append(ImageTk.PhotoImage(frame))
-                self.gif.seek(len(self.frames)) 
-        except EOFError:
-            pass 
+      
+        bg = Image.open("home.jpg").resize((WIDTH, HEIGHT))
+        bg = bg.filter(ImageFilter.GaussianBlur(radius=5))
+        self.bg = ImageTk.PhotoImage(bg)
 
-        self.current_frame = 0
-        self.bg = self.frames[self.current_frame]
-
-        self.canvas = tk.Canvas(root, width=WIDTH, height=HEIGHT, highlightthickness=0)
+        self.canvas = tk.Canvas(
+            root,
+            width=WIDTH,
+            height=HEIGHT,
+            highlightthickness=0
+        )
         self.canvas.pack(fill="both", expand=True)
+        self.canvas.create_image(0, 0, image=self.bg, anchor="nw")
 
-        # Coloca o frame
-        self.bg_image_id = self.canvas.create_image(0, 0, anchor="nw", image=self.bg)
-
-        # loop - gif
-        self.animate_bg()
-
-        # filtro preto
         self.canvas.create_rectangle(
             0,
             0,
             WIDTH,
             HEIGHT,
-            fill="#030303",
+            fill="#000000",
             stipple="gray50",
             outline=""
         )
 
-        # Capa
-        self.original_cover = Image.open("gatito.jpg").resize((220, 220))
+  
+        self.original_cover = Image.open("home.jpg").resize((220, 220))
         self.cover = ImageTk.PhotoImage(self.original_cover)
 
         self.cover_id = self.canvas.create_image(
@@ -61,7 +51,7 @@ class MusicPlayer:
             image=self.cover
         )
 
-        # Nome da musiguinha
+   
         self.music_title = self.canvas.create_text(
             WIDTH // 2,
             340,
@@ -89,10 +79,9 @@ class MusicPlayer:
             )
         )
 
-        # Barra de progresso
         style.configure(
             "Custom.Horizontal.TProgressbar",
-            troughcolor="#05042E",   # fundo
+            troughcolor="#3D0505", 
             background="white"       
         )
         self.progress = ttk.Progressbar(
@@ -108,7 +97,7 @@ class MusicPlayer:
             window=self.progress
         )
 
-        # Letras
+     
         self.lyric = self.canvas.create_text(
             WIDTH // 2,
             470,
@@ -119,12 +108,12 @@ class MusicPlayer:
             justify="center"
         )
 
-        # Play
+   
         self.play = tk.Button(
             root,
             text="▶",
             font=("Arial", 22),
-            bg="#120d42",
+            bg="#420d0d",
             fg="white",
             command=self.toggle_music
         )
@@ -135,18 +124,13 @@ class MusicPlayer:
             window=self.play
         )
 
-    #A ANIMAÇÃO DO GIF 
-    def animate_bg(self):
-        self.bg = self.frames[self.current_frame]
-        self.canvas.itemconfig(self.bg_image_id, image=self.bg)
-        self.current_frame = (self.current_frame + 1) % len(self.frames)
-        # 60 milisg por frame- ELE NEGOSA O TEMPO PRA DEIXAR MAIS RAPIDO OU DIVAGAR
-        self.root.after(90, self.animate_bg)
 
-    def rotate(self): #animaçãozinha DA FOTO
+
+    def rotate(self):
+
         if not self.playing:
             return
-        self.angle = (self.angle + 3) % 360
+        self.angle = (self.angle + 3) 
         img = self.original_cover.rotate(-self.angle)
         self.cover = ImageTk.PhotoImage(img)
 
@@ -154,6 +138,7 @@ class MusicPlayer:
             self.cover_id,
             image=self.cover
         )
+
         self.root.after(75, self.rotate)
 
     def progress_bar(self):
@@ -166,7 +151,10 @@ class MusicPlayer:
         self.progress["value"] = value
         self.root.after(95, self.progress_bar)
 
+
+
     def toggle_music(self):
+
         self.playing = not self.playing
 
         if self.playing:
@@ -184,6 +172,7 @@ class MusicPlayer:
                     item,
                     text=text[:index]
                 )
+                
                 self.root.after(
                     speed,
                     lambda: typing(index + 1)
@@ -193,6 +182,7 @@ class MusicPlayer:
         typing()
 
     def sing(self):
+
         lyrics = [
             ("Véu e grinalda", 100),
             ("Lua de mel", 100),
@@ -225,9 +215,11 @@ style.theme_use("clam")
 
 style.configure(
     "Custom.Horizontal.TProgressbar",
-    troughcolor ="#555555",
+    troughcolor ="#BD5A5A",
     background="white"
 )
 
 MusicPlayer(root)
+
 root.mainloop()
+

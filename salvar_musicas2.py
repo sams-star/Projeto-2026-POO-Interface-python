@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog
+from tkinter import filedialog, messagebox
 import pygame
 import os
 import json
@@ -7,58 +7,66 @@ import json
 WIDTH = 360
 HEIGHT = 600
 
-
 class SalvarMusicas:
-
-    def __init__(self, master):
-
+    def __init__(self, master, usuario_logado):
+        self.usuario_logado = usuario_logado
+        self.nome_arquivo_json = "usuarios.json"
         self.root = tk.Toplevel(master)
-        self.root.title("SpotTI - Minhas Músicas")
-        self.root.geometry(f"{WIDTH}x{HEIGHT}")
+        self.root.title(f"SpotTI - Músicas de {self.usuario_logado}")
+        self.root.geometry("360x600")
         self.root.configure(bg="#121212")
         self.root.resizable(False, False)
 
-        pygame.mixer.init()
 
+        pygame.mixer.init()
+            
         self.songs = []
         self.atual_song = ""
         self.paused = False
         self.directory = ""
+        
+        # Garante o foco nesta nova janela
+        self.root.grab_set()
 
+        # Componentes Visuais
         tk.Label(
-            self.root,
-            text="Suas Músicas",
-            bg="#121212",
-            fg="white",
-            font=("Arial",18,"bold")
+            self.root, 
+            text=f"Músicas de {self.usuario_logado}", 
+            bg="#121212", 
+            fg="white", 
+            font=("Arial", 16, "bold")
         ).pack(pady=15)
 
+        # Listbox para exibir as músicas
         self.songlist = tk.Listbox(
-            self.root,
-            bg="#1e1e1e",
-            fg="white",
-            selectbackground="#1db954",
-            selectforeground="white",
-            bd=0,
-            highlightthickness=0,
-            font=("Arial",11)
+            self.root, 
+            bg="#1e1e1e", 
+            fg="white", 
+            selectbackground="#1db954", 
+            selectforeground="white", 
+            bd=0, 
+            highlightthickness=0, 
+            font=("Arial", 11)
         )
-
         self.songlist.pack(
+            pady=10, 
             padx=20,
-            pady=10,
             fill="both",
-            expand=True
-        )
+            expand=True)
 
-        tk.Button(
-            self.root,
-            text="📁 Selecionar Pasta",
-            command=self.carregar_musicas,
-            bg="#1db954",
-            fg="white",
-            bd=0
-        ).pack(pady=10)
+        # Botão para carregar pastas
+        self.btn_carregar = tk.Button(
+            self.root, 
+            text="Selecionar Pasta", 
+            command=self.carregar_musica,
+            bg="#1db954", 
+            fg="white",  
+            bd=0,
+            activebackground="#1aa34a",
+            activeforeground="white"
+        )
+        self.btn_carregar.pack(fill="x", padx=20, pady=15, ipady=8)
+
 
         frame = tk.Frame(self.root,bg="#121212")
         frame.pack(pady=15)
@@ -68,44 +76,62 @@ class SalvarMusicas:
         tk.Button(frame,text="⏸",command=self.pause,width=3).grid(row=0,column=2,padx=5)
         tk.Button(frame,text="⏭",command=self.next,width=3).grid(row=0,column=3,padx=5)
 
+        # Carrega automaticamente as músicas já salvas no JSON ao abrir
+        self.carregar_historico_json()
 
-    def carregar_musicas(self):
+    def carregar_historico_json(self):
+        """Busca no arquivo JSON se o usuário já tem músicas salvas anteriormente."""
+        if os.path.exists(self.nome_arquivo_json):
+            try:
+                with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
+                    dados = json.load(arquivo)
+                    if self.usuario_logado in dados:
+                        self.songs = dados[self.usuario_logado].get("musicas", [])
+                        for song in self.songs:
+                            self.songlist.insert("end", song)
+                        if self.songs:
+                            self.songlist.select_set(0)
+                            self.atual_song = self.songs[0]
+            except Exception as e:
+                print("Erro ao ler histórico do JSON:", e)
 
-        pasta = filedialog.askdirectory(parent=self.root)
+    def carregar_musica(self):
+        """Abre o seletor de diretório e atualiza a lista de músicas do usuário."""
+        diretorio = filedialog.askdirectory(parent=self.root)
 
-        if not pasta:
+        if not diretorio: 
             return
 
-        self.directory = pasta
-
         self.songs.clear()
-        self.songlist.delete(0,tk.END)
+        self.songlist.delete(0, tk.END)
 
-        for arquivo in os.listdir(pasta):
+        # Escaneia os arquivos mp3 da pasta escolhida
+        for item in os.listdir(diretorio):
+            name, ext = os.path.splitext(item) 
+            if ext.lower() == '.mp3':
+                self.songs.append(item)
 
-            if arquivo.lower().endswith(".mp3"):
+        # Popula a listbox visual
+        for song in self.songs:
+            self.songlist.insert("end", song)
 
-                self.songs.append(arquivo)
-                self.songlist.insert(tk.END,arquivo)
+        # Grava a nova lista dentro do objeto do usuário no arquivo JSON
+        if os.path.exists(self.nome_arquivo_json):
+            try:
+                with open(self.nome_arquivo_json, "r", encoding="utf-8") as arquivo:
+                    dados_usuarios = json.load(arquivo)
+                
+                if self.usuario_logado in dados_usuarios:
+                    dados_usuarios[self.usuario_logado]["musicas"] = self.songs
+                    
+                    with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
+                        json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
+            except Exception as e:
+                messagebox.showerror("Erro", f"Não foi possível salvar no JSON: {e}", parent=self.root)
 
         if self.songs:
             self.songlist.select_set(0)
             self.atual_song = self.songs[0]
-
-        self.salvar_json()
-
-
-    def salvar_json(self):
-
-        dados = {
-            "musicas": [
-                os.path.join(self.directory, musica)
-                for musica in self.songs
-            ]
-        }
-
-        with open("musicas.json", "w", encoding="utf-8") as arquivo:
-            json.dump(dados, arquivo, indent=4, ensure_ascii=False)
 
 
     def play(self):
@@ -176,4 +202,3 @@ class SalvarMusicas:
         self.paused=False
 
         self.play()
-
