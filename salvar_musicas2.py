@@ -17,6 +17,7 @@ class SalvarMusicas:
             self.root.configure(bg="#121212")
             self.root.resizable(False, False)
 
+
             pygame.mixer.init()
                 
             self.songs = []
@@ -33,6 +34,7 @@ class SalvarMusicas:
                 fg="white", 
                 font=("Arial", 16, "bold")
             ).pack(pady=15)
+
         
             self.songlist = tk.Listbox(
                 self.root, 
@@ -74,6 +76,7 @@ class SalvarMusicas:
 
             self.carregar_historico_json()
 
+        
 
         def carregar_historico_json(self):
             if os.path.exists(self.nome_arquivo_json):
