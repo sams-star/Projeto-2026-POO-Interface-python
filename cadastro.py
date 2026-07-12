@@ -53,8 +53,6 @@ class GerenciadorAutenticacao:
 
 
 class InterfaceLogin:
-    """Responsável por construir e gerenciar a janela de Login do SpotTI."""
-    
     def __init__(self, root):
         self.root = root
         self.configurar_janela()
