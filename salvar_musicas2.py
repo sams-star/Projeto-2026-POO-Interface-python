@@ -23,7 +23,6 @@ class SalvarMusicas:
             self.songs = []
             self.atual_song = ""
             self.paused = False
-            self.directory = ""
             
             self.root.grab_set()
 
@@ -85,9 +84,9 @@ class SalvarMusicas:
                         dados = json.load(arquivo)
                         if self.usuario_logado in dados:
                             self.songs = dados[self.usuario_logado].get("musicas", [])
-                            self.directory = dados[self.usuario_logado].get("diretorio", "")
                             for song in self.songs:
-                                self.songlist.insert("end", song)
+                                self.songlist.insert(tk.END, os.path.basename(song))
+
                             if self.songs:
                                 self.songlist.select_set(0)
                                 self.atual_song = self.songs[0]
@@ -100,18 +99,20 @@ class SalvarMusicas:
             if not diretorio: 
                 return
             
-            self.directory = diretorio
 
-            self.songs.clear()
-            self.songlist.delete(0, tk.END)
+            novas_musicas = []
 
             for item in os.listdir(diretorio):
-                name, ext = os.path.splitext(item) 
-                if ext.lower() == '.mp3':
-                    self.songs.append(item)
+                caminho = os.path.join(diretorio, item)
+                name, ext = os.path.splitext(item)
 
-            for song in self.songs:
-                self.songlist.insert("end", song)
+                if ext.lower() == ".mp3":
+                    if caminho not in self.songs:
+                        self.songs.append(caminho)
+                        novas_musicas.append(caminho)
+
+            for song in novas_musicas:
+                self.songlist.insert(tk.END, os.path.basename(song))
 
             if os.path.exists(self.nome_arquivo_json):
                 try:
@@ -120,7 +121,6 @@ class SalvarMusicas:
                     
                     if self.usuario_logado in dados_usuarios:
                         dados_usuarios[self.usuario_logado]["musicas"] = self.songs
-                        dados_usuarios[self.usuario_logado]["diretorio"] = self.directory
                         
                         with open(self.nome_arquivo_json, "w", encoding="utf-8") as arquivo:
                             json.dump(dados_usuarios, arquivo, indent=4, ensure_ascii=False)
@@ -131,7 +131,7 @@ class SalvarMusicas:
                 self.songlist.select_set(0)
                 self.atual_song = self.songs[0]
 
-            self.carregar_musica()
+           
 
 
         def play(self):
@@ -144,13 +144,8 @@ class SalvarMusicas:
             except:
                 pass
 
-            caminho = os.path.join(
-                self.directory,
-                self.atual_song
-            )
-
             if not self.paused:
-                pygame.mixer.music.load(caminho)
+                pygame.mixer.music.load(self.atual_song)
                 pygame.mixer.music.play()
 
             else:
