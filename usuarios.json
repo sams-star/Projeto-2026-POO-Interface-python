@@ -14,13 +14,10 @@
     "lena": {
         "senha": "123",
         "musicas": [
-            "11 - Solidão.mp3",
-            "Et Verbum  Kelly Patrícia - Jeferson Rosa.mp3",
-            "kelly patricia  passarinho - Adriana Soares.mp3",
-            "Kelly Patricia  Prisioneiro do Amor - Artur Passos.mp3",
-            "Kelly PatriciaRegaço Acolhedor - lexmecctc.mp3",
-            "Tarde te Amei  Santo Agostinho  Ir. Kelly Patrícia - Misericórdia Play.mp3"
-        ]
+            "Arctic_Monkeys_-_Why_d_You_Only_Call_Me_When_You_re_High_(mp3.pm).mp3",
+            "guilhermeterra-sweet-child-o-mine-78fdced7.mp3"
+        ],
+        "diretorio": "C:/Users/Sâmela/Music/songs"
     },
     "caty": {
         "senha": "123",
@@ -31,7 +28,8 @@
             "Kelly Patricia  Prisioneiro do Amor - Artur Passos.mp3",
             "Kelly PatriciaRegaço Acolhedor - lexmecctc.mp3",
             "Tarde te Amei  Santo Agostinho  Ir. Kelly Patrícia - Misericórdia Play.mp3"
-        ]
+        ],
+        "diretorio": "C:/Users/Sâmela/Music/musicas alternativas"
     },
     "caty444": {
         "senha": "rebeca",

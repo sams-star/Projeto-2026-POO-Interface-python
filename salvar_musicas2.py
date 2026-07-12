@@ -16,8 +16,6 @@ class SalvarMusicas:
             self.root.geometry(f"{WIDTH}x{HEIGHT}")
             self.root.configure(bg="#121212")
             self.root.resizable(False, False)
-            
-
 
             pygame.mixer.init()
                 
@@ -35,7 +33,6 @@ class SalvarMusicas:
                 fg="white", 
                 font=("Arial", 16, "bold")
             ).pack(pady=15)
-
         
             self.songlist = tk.Listbox(
                 self.root, 
@@ -77,8 +74,6 @@ class SalvarMusicas:
 
             self.carregar_historico_json()
 
-        
-        
 
         def carregar_historico_json(self):
             if os.path.exists(self.nome_arquivo_json):
@@ -103,7 +98,6 @@ class SalvarMusicas:
                 return
             
             self.directory = diretorio
-            
 
             self.songs.clear()
             self.songlist.delete(0, tk.END)
@@ -134,36 +128,31 @@ class SalvarMusicas:
                 self.songlist.select_set(0)
                 self.atual_song = self.songs[0]
 
-            self.salvar_json()
+            self.carregar_musica()
 
 
         def play(self):
             if not self.songs:
-                print("Nenhuma música carregada.")
                 return
 
             try:
                 indice = self.songlist.curselection()[0]
                 self.atual_song = self.songs[indice]
             except:
-                print("Nenhuma música selecionada.")
-                return
+                pass
 
-            caminho = os.path.join(self.directory, self.atual_song)
+            caminho = os.path.join(
+                self.directory,
+                self.atual_song
+            )
 
-            print("----------------------------")
-            print("Diretório:", self.directory)
-            print("Música:", self.atual_song)
-            print("Caminho:", caminho)
-            print("Arquivo existe?", os.path.exists(caminho))
-
-            try:
+            if not self.paused:
                 pygame.mixer.music.load(caminho)
                 pygame.mixer.music.play()
-                print("Música iniciada.")
-            except Exception as e:
-                print("ERRO:", e)
 
+            else:
+                pygame.mixer.music.unpause()
+                self.paused = False
 
         def pause(self):
             pygame.mixer.music.pause()
@@ -179,9 +168,7 @@ class SalvarMusicas:
 
             self.songlist.select_clear(0,tk.END)
             self.songlist.select_set(indice)
-
             self.atual_song=self.songs[indice]
-
             self.paused=False
 
             self.play()
@@ -196,9 +183,7 @@ class SalvarMusicas:
 
             self.songlist.select_clear(0,tk.END)
             self.songlist.select_set(indice)
-
             self.atual_song=self.songs[indice]
-
             self.paused=False
 
             self.play()
