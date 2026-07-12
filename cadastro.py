@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageTk
 WIDTH = 360
 HEIGHT = 600
 ARQUIVO_USUARIOS = "usuarios.json"
-IMAGEM_LOGO = "logo.jpeg"
+IMAGEM_LOGO = "logo.jpg"
 
 # --- PALETA DE CORES ---
 COR_BG_PRINCIPAL = "#121212"
