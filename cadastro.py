@@ -5,13 +5,13 @@ import tkinter as tk
 from tkinter import messagebox
 from PIL import Image, ImageDraw, ImageTk
 
-
+# --- CONFIGURAÇÕES GLOBAIS --- 
 WIDTH = 360
-HEIGHT = 600
+HEIGHT = 600 
 ARQUIVO_USUARIOS = "usuarios.json"
 IMAGEM_LOGO = "logo.jpg"
 
-
+# --- PALETA DE CORES ---
 COR_BG_PRINCIPAL = "#121212"
 COR_BG_INPUT = "#1e1e1e"
 COR_TEXTO = "white"
@@ -53,6 +53,8 @@ class GerenciadorAutenticacao:
 
 
 class InterfaceLogin:
+    """Responsável por construir e gerenciar a janela de Login do SpotTI."""
+    
     def __init__(self, root):
         self.root = root
         self.configurar_janela()
@@ -84,11 +86,13 @@ class InterfaceLogin:
             return ImageTk.PhotoImage(Image.new('RGBA', (tamanho, tamanho)))
 
     def criar_widgets(self):
+
+        # Logo Circular
         self.logo_image = self.carregar_imagem_circular(IMAGEM_LOGO, tamanho=150)
         label_logo = tk.Label(self.root, image=self.logo_image, bg=COR_BG_PRINCIPAL, bd=0)
         label_logo.pack(pady=(50, 10))
 
-       
+        # Título
         tk.Label(
             self.root, 
             text="Login",
@@ -97,7 +101,7 @@ class InterfaceLogin:
             fg=COR_TEXTO
         ).pack(pady=(0, 20))
 
-       
+        # Campo Usuário
         tk.Label(
             self.root, 
             text="Nome de Usuário", 
@@ -115,7 +119,7 @@ class InterfaceLogin:
         
         self.entry_usuario.pack(fill="x", padx=45, ipady=8)
 
-        
+        # Campo Senha
         tk.Label(
             self.root, 
             text="Senha", 
@@ -133,7 +137,7 @@ class InterfaceLogin:
             insertbackground=COR_TEXTO)
         self.entry_senha.pack(fill="x", padx=45, ipady=8)
 
-       
+        # Botão Conectar
         btn_entrar = tk.Button(
             self.root, text="Conectar",
             command=self.executar_login,
@@ -163,12 +167,12 @@ class InterfaceLogin:
         elif resultado == "cadastro_sucesso":
             messagebox.showinfo("Sucesso", f"Conta criada!\nBem-vindo, {usuario}!")
 
-      
+        # Inicializa o próximo script e fecha a tela atual
         subprocess.Popen(["python", "main.py", usuario])
         self.root.destroy()
 
 
-
+# --- EXECUÇÃO DO PROGRAMA ---
 if __name__ == "__main__":
     janela_principal = tk.Tk()
     app = InterfaceLogin(janela_principal)

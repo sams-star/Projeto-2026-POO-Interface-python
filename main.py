@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw  
 import sys
 
 from sweetChildOMine import Play_SweetChildoMine
@@ -14,9 +14,9 @@ HEIGHT = 600
 
 janela = None
 
-USUARIO_LOGADO = sys.argv[1] if len(sys.argv) > 1 else sys.exit()
+USUARIO_LOGADO = sys.argv if len(sys.argv) > 1 else sys.exit("Erro: Nenhum usuário foi informado.")
 
-def playlist(nome, img_path, comando):
+def playlist(nome, img_path, command):
 
     frame = tk.Frame(janela, bg="#121212")
     frame.pack(fill="x", padx=15, pady=6)
@@ -35,7 +35,7 @@ def playlist(nome, img_path, comando):
     botao = tk.Button(
         frame,
         text=nome,
-        command=comando,
+        command=command,
         bg="#121212",
         fg="white",
         bd=0,
@@ -56,14 +56,68 @@ def main():
     janela.geometry(f"{WIDTH}x{HEIGHT}")
     janela.configure(bg="#121212")
 
-    tk.Label(
-        janela,
+
+    # --- CÓDIGO DA LOGO CIRCULAR (SEU BLOCO ATUALIZADO) ---
+    tamanho_logo = (52, 52) 
+    img_logo = Image.open("logo.jpg").convert("RGBA").resize(tamanho_logo, Image.Resampling.LANCZOS)
+    
+    mascara = Image.new("L", tamanho_logo, 0)
+    draw = ImageDraw.Draw(mascara)
+    draw.ellipse((0, 0) + tamanho_logo, fill=255)
+    
+    img_circular = Image.new("RGBA", tamanho_logo, (0, 0, 0, 0))
+    img_circular.paste(img_logo, (0, 0), mask=mascara)
+    
+    foto_logo = ImageTk.PhotoImage(img_circular)
+
+    frame_cabecalho = tk.Frame(janela, bg="#121212")
+    frame_cabecalho.pack(fill="x", padx=20, pady=(20, 10))
+
+   
+
+    def abrir_perfil():
+        import subprocess
+        import os
+    
+        diretorio_atual = os.path.dirname(os.path.abspath(__file__))
+        caminho_perfil = os.path.join(diretorio_atual, "perfil.py")
+
+    
+        if isinstance(USUARIO_LOGADO, list) and len(USUARIO_LOGADO) > 1:
+            usuario_envio = USUARIO_LOGADO[1]
+        else:
+            usuario_envio = str(USUARIO_LOGADO)
+
+        try:
+        
+         subprocess.Popen([sys.executable, caminho_perfil, usuario_envio])
+        except Exception as erro:
+            print(f"Erro ao tentar abrir o arquivo perfil.py: {erro}")
+
+ 
+
+    botao_logo = tk.Button(
+        frame_cabecalho, 
+        image=foto_logo, 
+        bg="#121212",
+        activebackground="#121212", 
+        bd=0,                       
+        command=abrir_perfil,       
+        cursor="hand2"              # Mostra a mãozinha de clique
+    )
+    botao_logo.image = foto_logo
+    botao_logo.pack(side="left", padx=(0, 12))
+
+   
+    label_texto_biblioteca = tk.Label(
+        frame_cabecalho,
         text="Sua Biblioteca",
         bg="#121212",
         fg="white",
         font=("Arial", 18, "bold")
-    ).pack(pady=15)
-
+    )
+    label_texto_biblioteca.pack(side="left")
+   
     tk.Label(
         janela,
         text="Playlists",
@@ -106,9 +160,6 @@ def main():
         "musica.jpg",
         lambda: SalvarMusicas(janela, USUARIO_LOGADO)
     )
-
-    
-    
 
     janela.mainloop()
 

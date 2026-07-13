@@ -8,8 +8,18 @@ WIDTH = 360
 HEIGHT = 600
 
 class SalvarMusicas:
+        
+        
         def __init__(self, master, usuario_logado):
-            self.usuario_logado = usuario_logado
+            
+            if isinstance(usuario_logado, list) and len(usuario_logado) > 1:
+                self.usuario_logado = usuario_logado[1]
+            elif isinstance(usuario_logado, list):
+                self.usuario_logado = "Usuário"
+            else:
+                self.usuario_logado = usuario_logado
+
+
             self.nome_arquivo_json = "usuarios.json"
             self.root = tk.Toplevel(master)
             self.root.title(f"SpotTI - Músicas de {self.usuario_logado}")
