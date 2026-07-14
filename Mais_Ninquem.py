@@ -293,7 +293,7 @@ class Play_MaisNinguem:
             ("Diz que é verdade, que tem saudade", 90),
             ("Que ainda você pensa muito em mim", 80),
             ("Diz que é verdade, que tem saudade", 70),
-            ("Que ainda você quer viver pra mim", 80),
+            ("Que ainda você quer viver pra mim", 70),
             ("", 5000), 
     ]
 

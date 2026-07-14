@@ -2,7 +2,7 @@ import tkinter as tk
 from PIL import Image, ImageTk, ImageDraw  
 import sys
 
-from sweetChildOMine import Play_SweetChildoMine
+from sweetChildOMine1 import Play_SweetChildoMine
 from wonderwall import Play_Wonderwall
 from bringMeToLife import Play_BringMeToLife
 from Mais_Ninquem import Play_MaisNinguem
