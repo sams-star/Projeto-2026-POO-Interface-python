@@ -201,7 +201,7 @@ class Play_SweetChildoMine:
         if value > 100:
             value = 0
         self.progress["value"] = value
-        self.root.after(300, self.progress_bar)
+        self.root.after(450, self.progress_bar)
 
     def toggle_music(self):
         if not os.path.exists(self.atual_song):
@@ -254,50 +254,39 @@ class Play_SweetChildoMine:
     def sing(self):
         self.singing = True
         lyrics = [
-            ("", 20150), 
-            ("Quando eu digo que deixei de te amar", 140),
-            ("É porque eu te amo", 120),
-            ("Quando eu digo que não quero mais você", 150),
-            ("É porque eu te quero", 150),
-            ("Eu tenho medo de te dar meu coração", 130),
-            ("E confessar que eu estou em tuas mãos", 130),
-            ("Mas não posso imaginar", 100),
-            ("O que vai ser de mim", 90),
-            ("Se eu te perder um dia", 150),
-            ("", 100), 
-            ("Eu me afasto e me defendo de você", 130),
-            ("Mas depois me entrego", 130),
-            ("Faço tipo, falo coisas que eu não sou", 130),
-            ("Mas depois eu nego", 100),
-            ("Mas a verdade", 100),
-            ("É que eu sou louco por você", 140),
-            ("E tenho medo de pensar em te perder", 110),
-            ("Eu preciso aceitar que não dá mais", 100),
-            ("Pra separar as nossas vidas", 100),
-            ("", 120),
-            ("E nessa loucura de dizer que não te quero", 100),
-            ("Vou negando as aparências", 90),
-            ("Disfarçando as evidências", 75),
-            ("Mas pra que viver fingindo", 80),
-            ("Se eu não posso enganar meu coração?", 80),
-            ("Eu sei que te amo!", 90),
-            ("", 90), 
-            ("Chega de mentiras", 80),
-            ("De negar o meu desejo", 70),
-            ("Eu te quero mais que tudo", 70),
-            ("Eu preciso do seu beijo", 75),
-            ("Eu entrego a minha vida", 75),
-            ("Pra você fazer o que quiser de mim", 75),
-            ("Só quero ouvir você dizer que sim!", 70),
-            ("", 900), 
-            ("Diz que é verdade, que tem saudade", 90),
-            ("Que ainda você pensa muito em mim", 80),
-            ("Diz que é verdade, que tem saudade", 70),
-            ("Que ainda você quer viver pra mim", 70),
-            ("", 5000), 
+            ("", 45150),
+            ("She's got a smile that it seems to me", 90),
+            ("Reminds me of childhood memories", 95),
+            ("Where everything was as fresh as the bright blue sky", 90),
+            ("Now and then when I see her face", 90),
+            ("She takes me away to that special place", 95),
+            ("And if I stared too long, I'd probably break down and cry", 90),
+            ("", 150),
+
+            ("Woah, oh, oh, sweet child of mine", 140),
+            ("Woah, oh, oh, oh, sweet love of mine", 160),
+            ("", 16550),
+
+            ("She's got eyes of the bluest skies", 90),
+            ("As if they thought of rain", 100),
+            ("I'd hate to look into those eyes and see an ounce of pain", 150),
+            ("Her hair reminds me of a warm, safe place", 100),
+            ("Where, as a child, I'd hide", 90),
+            ("And pray for the thunder and the rain to quietly pass me by", 100),
+            ("", 100),
+
+            ("Woah, oh, oh, sweet child of mine", 140),
+            ("Woah-woah, oh, oh, oh, sweet love of mine", 150),
+            ("", 15000),
+
+            ("not tempo decompletar a letra, dsclp :(", 500),
+            ("", 18000),
+            ("melhor solo da vida, ta?", 100),
+            ("AMOOOOOOOOOOOO", 100),
+
+        
     ]
-
-
+    
 
         def next_line():
            
