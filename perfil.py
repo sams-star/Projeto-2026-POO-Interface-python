@@ -19,8 +19,6 @@ COR_BOTAO_HOVER = "#ce0606"
 
 
 class GerenciadorPerfil:
-    """Responsável por carregar os dados específicos do usuário ativo do JSON."""
-    
     @staticmethod
     def buscar_senha_usuario(usuario):
 
