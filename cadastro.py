@@ -44,7 +44,7 @@ class GerenciadorAutenticacao:
                 return "login_sucesso"
             return "senha_incorreta"
         
-        # Cria novo usuário se não existir
+
         dados_usuarios[usuario] = {"senha": senha, "musicas": []}
         cls.salvar_dados(dados_usuarios)
         return "cadastro_sucesso"

@@ -57,7 +57,6 @@ def main():
     janela.configure(bg="#121212")
 
 
-    # --- CÓDIGO DA LOGO CIRCULAR (SEU BLOCO ATUALIZADO) ---
     tamanho_logo = (52, 52) 
     img_logo = Image.open("logo.jpg").convert("RGBA").resize(tamanho_logo, Image.Resampling.LANCZOS)
     
@@ -103,7 +102,7 @@ def main():
         activebackground="#121212", 
         bd=0,                       
         command=abrir_perfil,       
-        cursor="hand2"              # Mostra a mãozinha de clique
+        cursor="hand2"       
     )
     botao_logo.image = foto_logo
     botao_logo.pack(side="left", padx=(0, 12))
